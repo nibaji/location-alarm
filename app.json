@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "location-alarm",
+    "slug": "location-alarm",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "location-alarm"
+}
