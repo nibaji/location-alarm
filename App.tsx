@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Button, View, Text } from "react-native";
+import { StyleSheet, Button, View, Text, Dimensions } from "react-native";
 import WebView from "react-native-webview";
+
+const deviceWidth = Dimensions.get("window").width;
 
 export default function App() {
 	const [url, setUrl] = useState<string | undefined>(
@@ -52,7 +54,7 @@ const styles = StyleSheet.create({
 	},
 	webView: {
 		flex: 1,
-		width: 400,
+		width: deviceWidth,
 	},
 	buttonWrapper: {
 		flex: 0.16,
