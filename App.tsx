@@ -5,26 +5,23 @@ import WebView from "react-native-webview";
 const deviceWidth = Dimensions.get("window").width;
 
 export default function App() {
-	const [url, setUrl] = useState<string | undefined>(
-		"https://www.google.com/maps"
-	);
+	const [coordinates, setCoordinates] = useState<{
+		latitude: number;
+		longitude: number;
+	} | null>(null);
 
-	const getGpsCoordinates = () => {
+	const getGpsCoordinates = (url: string) => {
 		const regex = /@(-?\d+\.\d+),(-?\d+\.\d+)/;
 		const match = url?.match(regex);
 		if (match) {
 			const latitude = parseFloat(match[1]);
 			const longitude = parseFloat(match[2]);
-			console.log({ latitude, longitude });
-			return { latitude, longitude };
+			console.log({ latitude, longitude, url });
+			setCoordinates({ latitude, longitude });
 		} else {
-			return null;
+			setCoordinates(null);
 		}
 	};
-
-	useEffect(() => {
-		getGpsCoordinates();
-	}, [url]);
 
 	return (
 		<View style={styles.container}>
@@ -35,11 +32,17 @@ export default function App() {
 				geolocationEnabled
 				androidLayerType="hardware"
 				originWhitelist={["https://www.google.com/maps"]}
-				onNavigationStateChange={(e) => setUrl(e.url)}
+				onNavigationStateChange={(e) => getGpsCoordinates(e.url)}
 			/>
 			<View style={styles.buttonWrapper}>
-				<Button title="Pick the chosen location" color="red" />
+				<Button
+					title="Pick the chosen location"
+					color="royalblue"
+					disabled={!coordinates}
+				/>
 				<Text>Search a location or Pick in the map</Text>
+				<Text>Current Latitude: {coordinates?.latitude}</Text>
+				<Text>Current longitude: {coordinates?.longitude}</Text>
 			</View>
 		</View>
 	);
@@ -58,7 +61,7 @@ const styles = StyleSheet.create({
 	},
 	buttonWrapper: {
 		flex: 0.16,
-		backgroundColor: "purple",
+		backgroundColor: "lightcyan",
 		justifyContent: "center",
 		width: "100%",
 		padding: 16,
