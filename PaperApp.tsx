@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PaperProvider } from "react-native-paper";
 import { LocationObject } from "expo-location";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import App from "./App";
 
@@ -37,6 +38,23 @@ const PaperApp = () => {
 			})
 		);
 
+	const saveAlarmsToAsync = async () => {
+		try {
+			await AsyncStorage.setItem("alarms", JSON.stringify(alarms));
+		} catch (e) {
+			console.log(e, "Alarms Set Async");
+		}
+	};
+
+	const hydrateAlarmsFromAsync = async () => {
+		try {
+			const theAlarms = await AsyncStorage.getItem("alarms");
+			if (theAlarms) setAlarms(JSON.parse(theAlarms));
+		} catch (e) {
+			console.log(e, "Alarms Get Async");
+		}
+	};
+
 	const value = {
 		...initialAppState,
 		theme,
@@ -45,6 +63,7 @@ const PaperApp = () => {
 		setCurrentLocation,
 		alarms,
 		setAlarms,
+		saveAlarmsToAsync,
 		deleteAlarm,
 		editAlarm,
 		currentAlarm,
@@ -56,6 +75,14 @@ const PaperApp = () => {
 		formDataDraft,
 		setFormDataDraft,
 	};
+
+	useEffect(() => {
+		saveAlarmsToAsync();
+	}, [JSON.stringify(alarms)]);
+
+	useEffect(() => {
+		hydrateAlarmsFromAsync();
+	}, []);
 
 	return (
 		<AppContext.Provider value={value}>

@@ -43,8 +43,6 @@ export const App: React.FC = () => {
 		setShowManualLocationInputModal(false);
 	};
 
-	useEffect(() => {}, []);
-
 	useEffect(() => {
 		getUserLocation();
 	}, []);

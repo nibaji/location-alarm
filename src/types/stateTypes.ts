@@ -25,6 +25,7 @@ export type AppStateType = {
 	setCurrentLocation: Function;
 	alarms: AlarmItemType[];
 	setAlarms: Function;
+	saveAlarmsToAsync: Function;
 	deleteAlarm: Function;
 	editAlarm: Function;
 	currentAlarm: AlarmItemType | undefined;

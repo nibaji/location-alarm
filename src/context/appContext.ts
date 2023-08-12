@@ -11,6 +11,7 @@ export const initialAppState: AppStateType = {
 	setCurrentLocation: () => {},
 	alarms: [],
 	setAlarms: () => {},
+	saveAlarmsToAsync: async () => {},
 	deleteAlarm: () => {},
 	editAlarm: () => {},
 	currentAlarm: undefined,
