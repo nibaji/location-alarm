@@ -114,13 +114,16 @@ export const locationInputStyle = (theme: MD3Theme) =>
 		},
 	});
 
-export const alarmList = (theme: MD3Theme) =>
+export const alarmListStyle = (theme: MD3Theme) =>
 	StyleSheet.create({
-		container: {
+		emptyTextWrapper: {
+			display: "flex",
 			flex: 1,
-			backgroundColor: theme.colors.background,
-			alignItems: "center",
 			justifyContent: "center",
+			height: deviceHeight * 0.7,
+		},
+		emptyText: {
+			color: theme.colors.error,
 		},
 	});
 

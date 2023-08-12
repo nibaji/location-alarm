@@ -6,7 +6,7 @@ import App from "./App";
 
 import { AppContext, initialAppState } from "./src/context/appContext";
 
-import { AlarmsType } from "./src/types/stateTypes";
+import { AlarmItemType, AlarmsType } from "./src/types/stateTypes";
 
 import { dark } from "./src/styles/paperTheme";
 
@@ -15,7 +15,25 @@ const PaperApp = () => {
 	const [currentLocation, setCurrentLocation] = useState<LocationObject | null>(
 		null
 	);
-	const [alarms, setNewAlarm] = useState<AlarmsType>([]);
+	const [alarms, setAlarms] = useState<AlarmsType>([]);
+	const [currentAlarm, setCurrentAlarm] = useState<AlarmItemType | undefined>();
+
+	const [showMapViewModal, setShowMapViewModal] = useState(false);
+	const [showManualLocationInputModal, setShowManualLocationInputModal] =
+		useState(false);
+
+	const deleteAlarm = (id: string) =>
+		setAlarms(alarms.filter((_alarm) => _alarm.id !== id));
+
+	const editAlarm = (id: string, newAlarmData: AlarmItemType) =>
+		setAlarms(
+			alarms.map((_alarm) => {
+				if (_alarm.id === id) {
+					return newAlarmData;
+				}
+				return _alarm;
+			})
+		);
 
 	const value = {
 		...initialAppState,
@@ -24,7 +42,15 @@ const PaperApp = () => {
 		currentLocation,
 		setCurrentLocation,
 		alarms,
-		setNewAlarm,
+		setAlarms,
+		deleteAlarm,
+		editAlarm,
+		currentAlarm,
+		setCurrentAlarm,
+		showMapViewModal,
+		setShowMapViewModal,
+		showManualLocationInputModal,
+		setShowManualLocationInputModal,
 	};
 
 	return (

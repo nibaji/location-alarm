@@ -4,6 +4,8 @@ export type MapViewPropsType = {};
 
 export type LocationInputType = {
 	closeModal: Function;
+	isEdit?: Boolean;
+	currentAlarm?: AlarmItemType;
 };
 
 export type AlarmListItemType = {

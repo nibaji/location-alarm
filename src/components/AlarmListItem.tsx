@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { View } from "react-native";
-import { Surface, Text, Button, Divider } from "react-native-paper";
+import { Surface, Text, Button, Divider, Switch } from "react-native-paper";
 
 import { AppContext } from "../context/appContext";
 
@@ -9,7 +9,19 @@ import { AlarmListItemType } from "../types/propTypes";
 import { alarmListItemStyle } from "../styles/styles";
 
 const AlarmListItem: React.FC<AlarmListItemType> = ({ alarm }) => {
-	const { theme } = useContext(AppContext);
+	const {
+		theme,
+		editAlarm,
+		deleteAlarm,
+		setCurrentAlarm,
+		setShowManualLocationInputModal,
+	} = useContext(AppContext);
+
+	const handleEdit = () => {
+		setCurrentAlarm(alarm);
+		setShowManualLocationInputModal(true);
+	};
+
 	return (
 		<Surface
 			style={alarmListItemStyle(theme).container}
@@ -32,10 +44,19 @@ const AlarmListItem: React.FC<AlarmListItemType> = ({ alarm }) => {
 				<Button
 					icon="delete"
 					labelStyle={alarmListItemStyle(theme).deleteButton}
+					onPress={() => deleteAlarm(alarm.id)}
 				>
 					Delete
 				</Button>
-				<Button icon="circle-edit-outline">Edit</Button>
+				<Button icon="circle-edit-outline" onPress={handleEdit}>
+					Edit
+				</Button>
+				<Switch
+					value={alarm.active}
+					onValueChange={(value) =>
+						editAlarm(alarm.id, { ...alarm, active: value })
+					}
+				/>
 			</View>
 		</Surface>
 	);

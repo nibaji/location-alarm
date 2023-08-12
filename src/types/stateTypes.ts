@@ -10,8 +10,8 @@ export type AlarmItemType = {
 	title: string;
 	location: CoordinatesType;
 	radius: number;
-	active: Boolean;
-	id: string; // title + location.latitude.toString() + location.longitude.toString() + radius.toString()
+	active: boolean;
+	id: string; // date in millisecond string
 };
 
 export type AlarmsType = AlarmItemType[];
@@ -22,5 +22,13 @@ export type AppStateType = {
 	currentLocation: LocationObject | null;
 	setCurrentLocation: Function;
 	alarms: AlarmItemType[];
-	setNewAlarm: Function;
+	setAlarms: Function;
+	deleteAlarm: Function;
+	editAlarm: Function;
+	currentAlarm: AlarmItemType | undefined;
+	setCurrentAlarm: Function;
+	showMapViewModal: boolean;
+	setShowMapViewModal: Function;
+	showManualLocationInputModal: boolean;
+	setShowManualLocationInputModal: Function;
 };

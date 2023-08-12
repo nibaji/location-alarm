@@ -1,12 +1,14 @@
 import React, { useContext } from "react";
-import { FlatList } from "react-native";
-import { Divider } from "react-native-paper";
+import { FlatList, View } from "react-native";
+import { Text } from "react-native-paper";
 
 import { AppContext } from "../context/appContext";
 import AlarmListItem from "./AlarmListItem";
+import { alarmListStyle } from "../styles/styles";
 
 const AlarmsList = () => {
-	const { alarms } = useContext(AppContext);
+	const { alarms, setShowManualLocationInputModal, theme } =
+		useContext(AppContext);
 
 	return (
 		<FlatList
@@ -14,6 +16,16 @@ const AlarmsList = () => {
 			renderItem={({ item }) => <AlarmListItem alarm={item} />}
 			keyExtractor={(item) => item.id}
 			showsVerticalScrollIndicator={false}
+			ListEmptyComponent={
+				<View style={alarmListStyle(theme).emptyTextWrapper}>
+					<Text
+						onPress={() => setShowManualLocationInputModal(true)}
+						style={alarmListStyle(theme).emptyText}
+					>
+						Alarms List is Empty! Add one?
+					</Text>
+				</View>
+			}
 		/>
 	);
 };

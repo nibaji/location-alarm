@@ -1,25 +1,29 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, ScrollView } from "react-native";
+import { View } from "react-native";
 import * as Location from "expo-location";
 import { Modal, Appbar, Text, FAB } from "react-native-paper";
 
 import MapView from "./src/components/MapView";
 import LocationInput from "./src/components/LocationInput";
+import AlarmsList from "./src/components/AlarmsList";
 
 import { AppContext } from "./src/context/appContext";
 
 import { appStyle, locationInputStyle } from "./src/styles/styles";
 import { dark, light } from "./src/styles/paperTheme";
-import AlarmsList from "./src/components/AlarmsList";
 
 export const App: React.FC = () => {
-	const [showMapViewModal, setMapViewShowModal] = useState(false);
-	const [showManualLocationInputModal, setShowManualLocationInputModal] =
-		useState(false);
 	const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-	const { setCurrentLocation, currentLocation, theme, setTheme } =
-		useContext(AppContext);
+	const {
+		setCurrentLocation,
+		theme,
+		setTheme,
+		setCurrentAlarm,
+		showMapViewModal,
+		showManualLocationInputModal,
+		setShowManualLocationInputModal,
+	} = useContext(AppContext);
 
 	const getUserLocation = async () => {
 		let { status } = await Location.requestForegroundPermissionsAsync();
@@ -32,6 +36,13 @@ export const App: React.FC = () => {
 		setCurrentLocation(location);
 		console.log({ location });
 	};
+
+	const closeModal = () => {
+		setCurrentAlarm(undefined);
+		setShowManualLocationInputModal(false);
+	};
+
+	useEffect(() => {}, []);
 
 	useEffect(() => {
 		getUserLocation();
@@ -46,22 +57,26 @@ export const App: React.FC = () => {
 					onPress={() => setTheme(theme === dark ? light : dark)}
 				/>
 			</Appbar>
-			<AlarmsList />
-			<FAB
-				icon="plus"
-				style={appStyle(theme).fab}
-				onPress={() =>
-					setShowManualLocationInputModal(!showManualLocationInputModal)
-				}
-			/>
+			{errorMsg ? (
+				<Text>Please Grant Location Permission for the app to work!</Text>
+			) : (
+				<>
+					<AlarmsList />
+					<FAB
+						icon="plus"
+						style={appStyle(theme).fab}
+						onPress={() =>
+							setShowManualLocationInputModal(!showManualLocationInputModal)
+						}
+					/>
+				</>
+			)}
 			<Modal
 				visible={showManualLocationInputModal}
-				onDismiss={() => setShowManualLocationInputModal(false)}
+				onDismiss={closeModal}
 				contentContainerStyle={locationInputStyle(theme).modalContainer}
 			>
-				<LocationInput
-					closeModal={() => setShowManualLocationInputModal(false)}
-				/>
+				<LocationInput closeModal={closeModal} />
 			</Modal>
 			<Modal visible={showMapViewModal}>
 				<MapView />

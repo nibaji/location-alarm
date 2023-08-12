@@ -10,6 +10,15 @@ export const initialAppState: AppStateType = {
 	currentLocation: null,
 	setCurrentLocation: () => {},
 	alarms: [],
+	setAlarms: () => {},
+	deleteAlarm: () => {},
+	editAlarm: () => {},
+	currentAlarm: undefined,
+	setCurrentAlarm: () => {},
+	showMapViewModal: false,
+	setShowMapViewModal: () => {},
+	showManualLocationInputModal: false,
+	setShowManualLocationInputModal: () => {},
 };
 
 export const AppContext = createContext(initialAppState);

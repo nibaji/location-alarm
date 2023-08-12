@@ -6,50 +6,45 @@ import { AppContext } from "../context/appContext";
 
 import { locationFormFields } from "../data/formFields";
 
+import { generateAlarmItemFromFormData } from "../utils/utils";
+
 import { LocationInputType } from "../types/propTypes";
 import { LocationFormDataType } from "../types/dataTypes";
 
 import { locationInputStyle } from "../styles/styles";
-import { generateAlarmIdFromForm } from "../utils/utils";
 
 const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
-	const { theme, alarms, setNewAlarm } = useContext(AppContext);
+	const { theme, alarms, setAlarms, editAlarm, currentAlarm } =
+		useContext(AppContext);
+
+	const isEdit = Boolean(currentAlarm);
 
 	const [formData, setFormData] = useState<LocationFormDataType>({
-		title: "",
-		latitude: "",
-		longitude: "",
-		radius: "",
+		title: currentAlarm?.title || " ",
+		latitude: currentAlarm?.location?.latitude.toString() || "",
+		longitude: currentAlarm?.location?.longitude.toString() || "",
+		radius: currentAlarm?.radius.toString() || "",
 	});
 
 	const onChangeText = (text: string, item: string) =>
 		setFormData({ ...formData, [item]: text });
 
-	const setAlarm = () => {
+	const setNewAlarm = () => {
 		const { title, latitude, longitude, radius } = formData;
 		if (formData.title && formData.latitude && formData.longitude) {
-			const isAlarmAlreadyPresent = alarms.find(
-				(_alarm) =>
-					_alarm.id ===
-					formData.title +
-						formData.latitude +
-						formData.longitude +
-						formData.radius
-			);
-			if (!isAlarmAlreadyPresent) {
-				setNewAlarm([
-					...alarms,
-					{
-						title,
-						location: {
-							latitude,
-							longitude,
-						},
-						radius,
-						id: generateAlarmIdFromForm(formData),
+			setAlarms([
+				...alarms,
+				{
+					title,
+					location: {
+						latitude: parseInt(latitude),
+						longitude: parseInt(longitude),
 					},
-				]);
-			}
+					radius: parseInt(radius),
+					id: new Date().getMilliseconds().toString(),
+				},
+			]);
+
 			closeModal();
 		}
 	};
@@ -57,7 +52,7 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 	return (
 		<View style={locationInputStyle(theme).container}>
 			<Text variant="titleLarge" style={locationInputStyle(theme).title}>
-				Add New Alarm
+				{isEdit ? `Edit Alarm` : "Add New Alarm"}
 			</Text>
 			<Divider style={locationInputStyle(theme).divider} />
 			{locationFormFields(formData, onChangeText).map((field) => (
@@ -81,8 +76,21 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 				>
 					Cancel
 				</Button>
-				<Button mode="elevated" onPress={setAlarm}>
-					Set Alarm
+				<Button
+					mode="elevated"
+					onPress={() => {
+						if (isEdit && currentAlarm) {
+							editAlarm(
+								currentAlarm.id,
+								generateAlarmItemFromFormData(currentAlarm, formData)
+							);
+							closeModal();
+						} else {
+							setNewAlarm();
+						}
+					}}
+				>
+					{isEdit ? "Confirm Edit" : "Set Alarm"}
 				</Button>
 			</View>
 		</View>
