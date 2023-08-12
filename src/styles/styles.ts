@@ -11,6 +11,7 @@ export const appStyle = (theme: MD3Theme) =>
 			backgroundColor: theme.colors.background,
 			alignItems: "center",
 			justifyContent: "center",
+			padding: 16,
 		},
 		fab: {
 			position: "absolute",
@@ -110,5 +111,40 @@ export const locationInputStyle = (theme: MD3Theme) =>
 		},
 		cancelButton: {
 			backgroundColor: theme.colors.errorContainer,
+		},
+	});
+
+export const alarmList = (theme: MD3Theme) =>
+	StyleSheet.create({
+		container: {
+			flex: 1,
+			backgroundColor: theme.colors.background,
+			alignItems: "center",
+			justifyContent: "center",
+		},
+	});
+
+export const alarmListItemStyle = (theme: MD3Theme) =>
+	StyleSheet.create({
+		container: {
+			width: deviceWidth * 0.85,
+			marginVertical: 8,
+			marginHorizontal: 8,
+			padding: 16,
+			borderRadius: theme.roundness,
+		},
+		locationContainer: {
+			flexDirection: "row",
+		},
+		divider: {
+			marginTop: 16,
+			marginBottom: 8,
+		},
+		buttonsContainer: {
+			flexDirection: "row",
+			justifyContent: "space-between",
+		},
+		deleteButton: {
+			color: theme.colors.error,
 		},
 	});
