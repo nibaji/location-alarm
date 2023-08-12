@@ -10,6 +10,7 @@ import { AppContext } from "./src/context/appContext";
 
 import { appStyle, locationInputStyle } from "./src/styles/styles";
 import { dark, light } from "./src/styles/paperTheme";
+import AlarmsList from "./src/components/AlarmsList";
 
 export const App: React.FC = () => {
 	const [showMapViewModal, setMapViewShowModal] = useState(false);
@@ -45,7 +46,7 @@ export const App: React.FC = () => {
 					onPress={() => setTheme(theme === dark ? light : dark)}
 				/>
 			</Appbar>
-			<ScrollView></ScrollView>
+			<AlarmsList />
 			<FAB
 				icon="plus"
 				style={appStyle(theme).fab}

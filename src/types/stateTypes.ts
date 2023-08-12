@@ -6,7 +6,7 @@ export type CoordinatesType = {
 	longitude: number;
 } | null;
 
-export type AlarmItem = {
+export type AlarmItemType = {
 	title: string;
 	location: CoordinatesType;
 	radius: number;
@@ -19,5 +19,5 @@ export type AppStateType = {
 	setTheme: Function;
 	currentLocation: LocationObject | null;
 	setCurrentLocation: Function;
-	alarms: AlarmItem[];
+	alarms: AlarmItemType[];
 };
