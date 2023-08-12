@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View } from "react-native";
 import { Button, Text, Surface, Card } from "react-native-paper";
 import WebView from "react-native-webview";
@@ -8,9 +8,12 @@ import { MapViewPropsType } from "../types/propTypes";
 import { CoordinatesType } from "../types/stateTypes";
 
 import { mapStyle } from "../styles/styles";
-import { paperTheme } from "../styles/paperTheme";
+import { dark } from "../styles/paperTheme";
+import { AppContext } from "../context/appContext";
 
 const MapView: React.FC<MapViewPropsType> = () => {
+	const { theme } = useContext(AppContext);
+
 	const [coordinates, setCoordinates] = useState<CoordinatesType>(null);
 
 	const getTargetGpsCoordinates = (url: string) => {
@@ -27,9 +30,9 @@ const MapView: React.FC<MapViewPropsType> = () => {
 	};
 
 	return (
-		<View style={mapStyle.container}>
+		<View style={mapStyle(theme).container}>
 			<WebView
-				style={mapStyle.webView}
+				style={mapStyle(theme).webView}
 				source={{ uri: "https://www.google.com/maps" }}
 				scrollEnabled
 				geolocationEnabled
@@ -37,37 +40,41 @@ const MapView: React.FC<MapViewPropsType> = () => {
 				originWhitelist={["https://www.google.com/maps"]}
 				onNavigationStateChange={(e) => getTargetGpsCoordinates(e.url)}
 			/>
-			<Surface style={mapStyle.detailsContainer} mode="elevated" elevation={4}>
+			<Surface
+				style={mapStyle(theme).detailsContainer}
+				mode="elevated"
+				elevation={4}
+			>
 				<Button
 					icon="google-maps"
-					buttonColor={paperTheme.colors.primaryContainer}
-					textColor={paperTheme.colors.secondary}
-					labelStyle={mapStyle.buttonLabel}
+					buttonColor={dark.colors.primaryContainer}
+					textColor={dark.colors.secondary}
+					labelStyle={mapStyle(theme).buttonLabel}
 				>
 					Pick the Chosen Location
 				</Button>
-				<Text style={mapStyle.hintText}>
+				<Text style={mapStyle(theme).hintText}>
 					<Entypo name="info-with-circle" /> Search a location or Pick in the
 					map
 				</Text>
 				<Card
-					style={mapStyle.coordinatesContainer}
+					style={mapStyle(theme).coordinatesContainer}
 					mode="elevated"
 					elevation={4}
 				>
-					<View style={mapStyle.coordinateItemContainer}>
-						<Text style={mapStyle.coordinateTitleText}>
+					<View style={mapStyle(theme).coordinateItemContainer}>
+						<Text style={mapStyle(theme).coordinateTitleText}>
 							Current Target Latitude :{" "}
 						</Text>
-						<Text style={mapStyle.coordinateDescriptionText}>
+						<Text style={mapStyle(theme).coordinateDescriptionText}>
 							{coordinates?.latitude}
 						</Text>
 					</View>
-					<View style={mapStyle.coordinateItemContainer}>
-						<Text style={mapStyle.coordinateTitleText}>
+					<View style={mapStyle(theme).coordinateItemContainer}>
+						<Text style={mapStyle(theme).coordinateTitleText}>
 							Current Target longitude :{" "}
 						</Text>
-						<Text style={mapStyle.coordinateDescriptionText}>
+						<Text style={mapStyle(theme).coordinateDescriptionText}>
 							{coordinates?.longitude}
 						</Text>
 					</View>
