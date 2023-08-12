@@ -13,12 +13,12 @@ import { mapStyle } from "../styles/styles";
 import { dark } from "../styles/paperTheme";
 
 const MapView: React.FC<MapViewPropsType> = () => {
-	const { theme } = useContext(AppContext);
+	const { theme, currentLocation } = useContext(AppContext);
 
 	const [coordinates, setCoordinates] = useState<CoordinatesType>(null);
 
 	const getTargetGpsCoordinates = (url: string) => {
-		const regex = /@(-?\d+\.\d+),(-?\d+\.\d+)/;
+		const regex = /lat=(-?\d+\.\d+)&lon=(-?\d+\.\d+)/;
 		const match = url?.match(regex);
 		if (match) {
 			const latitude = parseFloat(match[1]);
@@ -34,11 +34,13 @@ const MapView: React.FC<MapViewPropsType> = () => {
 		<View style={mapStyle(theme).container}>
 			<WebView
 				style={mapStyle(theme).webView}
-				source={{ uri: "https://www.google.com/maps" }}
+				source={{
+					uri: `https://www.openstreetmap.org/query?lat=${currentLocation?.coords.latitude}&lon=${currentLocation?.coords.longitude}`,
+				}}
 				scrollEnabled
 				geolocationEnabled
 				androidLayerType="hardware"
-				originWhitelist={["https://www.google.com/maps"]}
+				originWhitelist={["https://www.openstreetmap.org/query?"]}
 				onNavigationStateChange={(e) => getTargetGpsCoordinates(e.url)}
 			/>
 			<Surface
