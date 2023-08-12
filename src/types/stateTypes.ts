@@ -6,9 +6,18 @@ export type CoordinatesType = {
 	longitude: number;
 } | null;
 
+export type AlarmItem = {
+	title: string;
+	location: CoordinatesType;
+	radius: number;
+	active: Boolean;
+	id: string;
+};
+
 export type AppStateType = {
 	theme: MD3Theme;
 	setTheme: Function;
 	currentLocation: LocationObject | null;
 	setCurrentLocation: Function;
+	alarms: AlarmItem[];
 };

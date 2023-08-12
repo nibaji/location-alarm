@@ -4,14 +4,21 @@ import { PaperProvider } from "react-native-paper";
 
 import App from "./App";
 
+import { AppContext, initialAppState } from "./src/context/appContext";
+
 import { dark } from "./src/styles/paperTheme";
-import { AppContext } from "./src/context/appContext";
 
 const PaperApp = () => {
 	const [theme, setTheme] = useState(dark);
 	const [currentLocation, setCurrentLocation] = useState(null);
 
-	const value = { theme, setTheme, currentLocation, setCurrentLocation };
+	const value = {
+		...initialAppState,
+		theme,
+		setTheme,
+		currentLocation,
+		setCurrentLocation,
+	};
 
 	return (
 		<AppContext.Provider value={value}>

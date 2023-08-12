@@ -2,6 +2,7 @@ import { StyleSheet, Dimensions } from "react-native";
 import { MD3Theme } from "react-native-paper";
 
 const deviceWidth = Dimensions.get("window").width;
+const deviceHeight = Dimensions.get("window").height;
 
 export const appStyle = (theme: MD3Theme) =>
 	StyleSheet.create({
@@ -10,6 +11,10 @@ export const appStyle = (theme: MD3Theme) =>
 			backgroundColor: theme.colors.background,
 			alignItems: "center",
 			justifyContent: "center",
+		},
+		fab: {
+			position: "absolute",
+			bottom: "4%",
 		},
 	});
 
@@ -45,11 +50,11 @@ export const mapStyle = (theme: MD3Theme) =>
 			marginBottom: 8,
 			marginLeft: 16,
 			padding: 2,
-			borderRadius: 8,
+			borderRadius: theme.roundness,
 			textAlign: "center",
 		},
 		coordinatesContainer: {
-			borderRadius: 16,
+			borderRadius: theme.roundness,
 			paddingHorizontal: 24,
 			paddingVertical: 16,
 			margin: 8,
@@ -69,5 +74,41 @@ export const mapStyle = (theme: MD3Theme) =>
 			fontStyle: "italic",
 			fontWeight: "bold",
 			textAlign: "right",
+		},
+	});
+
+export const locationInputStyle = (theme: MD3Theme) =>
+	StyleSheet.create({
+		modalContainer: {
+			alignItems: "center",
+			justifyContent: "center",
+		},
+		container: {
+			width: deviceWidth * 0.9,
+			backgroundColor: theme.colors.background,
+			borderRadius: theme.roundness,
+			padding: 24,
+		},
+		title: {
+			textAlign: "center",
+			fontWeight: "bold",
+		},
+		divider: {
+			marginTop: 16,
+		},
+		textInput: {
+			marginTop: 12,
+		},
+		buttonsContainer: {
+			flexDirection: "row",
+			marginTop: 16,
+			justifyContent: "space-between",
+			alignItems: "center",
+		},
+		cancelButtonLabel: {
+			color: theme.colors.error,
+		},
+		cancelButton: {
+			backgroundColor: theme.colors.errorContainer,
 		},
 	});

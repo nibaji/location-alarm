@@ -9,6 +9,7 @@ export const initialAppState: AppStateType = {
 	setTheme: () => {},
 	currentLocation: null,
 	setCurrentLocation: () => {},
+	alarms: [],
 };
 
 export const AppContext = createContext(initialAppState);

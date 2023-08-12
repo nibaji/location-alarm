@@ -4,12 +4,13 @@ import { Button, Text, Surface, Card } from "react-native-paper";
 import WebView from "react-native-webview";
 import Entypo from "react-native-vector-icons/Entypo";
 
+import { AppContext } from "../context/appContext";
+
 import { MapViewPropsType } from "../types/propTypes";
 import { CoordinatesType } from "../types/stateTypes";
 
 import { mapStyle } from "../styles/styles";
 import { dark } from "../styles/paperTheme";
-import { AppContext } from "../context/appContext";
 
 const MapView: React.FC<MapViewPropsType> = () => {
 	const { theme } = useContext(AppContext);

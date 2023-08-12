@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, ScrollView } from "react-native";
 import * as Location from "expo-location";
-import { Modal, Appbar, Text } from "react-native-paper";
+import { Modal, Appbar, Text, FAB } from "react-native-paper";
 
 import MapView from "./src/components/MapView";
+import LocationInput from "./src/components/LocationInput";
 
 import { AppContext } from "./src/context/appContext";
 
-import { appStyle } from "./src/styles/styles";
+import { appStyle, locationInputStyle } from "./src/styles/styles";
 import { dark, light } from "./src/styles/paperTheme";
 
 export const App: React.FC = () => {
-	const [showModal, setShowModal] = useState(false);
+	const [showMapViewModal, setMapViewShowModal] = useState(false);
+	const [showManualLocationInputModal, setShowManualLocationInputModal] =
+		useState(false);
 	const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
 	const { setCurrentLocation, currentLocation, theme, setTheme } =
@@ -43,7 +46,23 @@ export const App: React.FC = () => {
 				/>
 			</Appbar>
 			<ScrollView></ScrollView>
-			<Modal visible={showModal}>
+			<FAB
+				icon="plus"
+				style={appStyle(theme).fab}
+				onPress={() =>
+					setShowManualLocationInputModal(!showManualLocationInputModal)
+				}
+			/>
+			<Modal
+				visible={showManualLocationInputModal}
+				onDismiss={() => setShowManualLocationInputModal(false)}
+				contentContainerStyle={locationInputStyle(theme).modalContainer}
+			>
+				<LocationInput
+					closeModal={() => setShowManualLocationInputModal(false)}
+				/>
+			</Modal>
+			<Modal visible={showMapViewModal}>
 				<MapView />
 			</Modal>
 		</View>

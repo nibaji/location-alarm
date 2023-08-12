@@ -45,6 +45,7 @@ export const dark: MD3Theme = {
 		onSurfaceDisabled: "rgba(226, 227, 221, 0.38)",
 		backdrop: "rgba(44, 50, 42, 0.4)",
 	},
+	roundness: 16,
 };
 
 export const light: MD3Theme = {
@@ -91,4 +92,5 @@ export const light: MD3Theme = {
 		onSurfaceDisabled: "rgba(26, 28, 25, 0.38)",
 		backdrop: "rgba(44, 50, 42, 0.4)",
 	},
+	roundness: 16,
 };
