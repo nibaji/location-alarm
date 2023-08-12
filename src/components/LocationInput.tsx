@@ -10,9 +10,10 @@ import { LocationInputType } from "../types/propTypes";
 import { LocationFormDataType } from "../types/dataTypes";
 
 import { locationInputStyle } from "../styles/styles";
+import { generateAlarmIdFromForm } from "../utils/utils";
 
 const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
-	const { theme } = useContext(AppContext);
+	const { theme, alarms, setNewAlarm } = useContext(AppContext);
 
 	const [formData, setFormData] = useState<LocationFormDataType>({
 		title: "",
@@ -24,7 +25,34 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 	const onChangeText = (text: string, item: string) =>
 		setFormData({ ...formData, [item]: text });
 
-	console.log({ formData });
+	const setAlarm = () => {
+		const { title, latitude, longitude, radius } = formData;
+		if (formData.title && formData.latitude && formData.longitude) {
+			const isAlarmAlreadyPresent = alarms.find(
+				(_alarm) =>
+					_alarm.id ===
+					formData.title +
+						formData.latitude +
+						formData.longitude +
+						formData.radius
+			);
+			if (!isAlarmAlreadyPresent) {
+				setNewAlarm([
+					...alarms,
+					{
+						title,
+						location: {
+							latitude,
+							longitude,
+						},
+						radius,
+						id: generateAlarmIdFromForm(formData),
+					},
+				]);
+			}
+			closeModal();
+		}
+	};
 
 	return (
 		<View style={locationInputStyle(theme).container}>
@@ -53,7 +81,9 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 				>
 					Cancel
 				</Button>
-				<Button mode="elevated">Set Alarm</Button>
+				<Button mode="elevated" onPress={setAlarm}>
+					Set Alarm
+				</Button>
 			</View>
 		</View>
 	);

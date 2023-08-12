@@ -11,8 +11,10 @@ export type AlarmItemType = {
 	location: CoordinatesType;
 	radius: number;
 	active: Boolean;
-	id: string;
+	id: string; // title + location.latitude.toString() + location.longitude.toString() + radius.toString()
 };
+
+export type AlarmsType = AlarmItemType[];
 
 export type AppStateType = {
 	theme: MD3Theme;
@@ -20,4 +22,5 @@ export type AppStateType = {
 	currentLocation: LocationObject | null;
 	setCurrentLocation: Function;
 	alarms: AlarmItemType[];
+	setNewAlarm: Function;
 };
