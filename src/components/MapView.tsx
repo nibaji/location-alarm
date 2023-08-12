@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { View, Button, Text } from "react-native";
+import { View } from "react-native";
+import { Button, Text } from "react-native-paper";
 import WebView from "react-native-webview";
+import Entypo from "react-native-vector-icons/Entypo";
 
 import { MapViewPropsType } from "../types/propTypes";
 import { CoordinatesType } from "../types/stateTypes";
 
 import { mapStyle } from "../styles/styles";
+import { paperTheme } from "../styles/paperTheme";
 
 const MapView: React.FC<MapViewPropsType> = () => {
 	const [coordinates, setCoordinates] = useState<CoordinatesType>(null);
@@ -34,15 +37,33 @@ const MapView: React.FC<MapViewPropsType> = () => {
 				originWhitelist={["https://www.google.com/maps"]}
 				onNavigationStateChange={(e) => getTargetGpsCoordinates(e.url)}
 			/>
-			<View style={mapStyle.buttonWrapper}>
+			<View style={mapStyle.detailsContainer}>
 				<Button
-					title="Pick the chosen location"
-					color="royalblue"
-					disabled={!coordinates}
-				/>
-				<Text>Search a location or Pick in the map</Text>
-				<Text>Current Latitude: {coordinates?.latitude}</Text>
-				<Text>Current longitude: {coordinates?.longitude}</Text>
+					icon="google-maps"
+					buttonColor={paperTheme.colors.primaryContainer}
+					textColor={paperTheme.colors.secondary}
+					labelStyle={mapStyle.buttonLabel}
+				>
+					Pick the Chosen Location
+				</Button>
+				<Text style={mapStyle.hintText}>
+					<Entypo name="info-with-circle" /> Search a location or Pick in the
+					map
+				</Text>
+				<View style={mapStyle.coordinatesContainer}>
+					<Text style={mapStyle.coordinateTitleText}>
+						Current Target Latitude :{" "}
+						<Text style={mapStyle.coordinateDescriptionText}>
+							{coordinates?.latitude}
+						</Text>
+					</Text>
+					<Text style={mapStyle.coordinateTitleText}>
+						Current Target longitude :{" "}
+						<Text style={mapStyle.coordinateDescriptionText}>
+							{coordinates?.longitude}
+						</Text>
+					</Text>
+				</View>
 			</View>
 		</View>
 	);
