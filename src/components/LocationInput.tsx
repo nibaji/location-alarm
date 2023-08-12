@@ -37,10 +37,10 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 				{
 					title,
 					location: {
-						latitude: parseInt(latitude),
-						longitude: parseInt(longitude),
+						latitude: Number(latitude),
+						longitude: Number(longitude),
 					},
-					radius: parseInt(radius),
+					radius: Number(radius),
 					id: new Date().getMilliseconds().toString(),
 				},
 			]);

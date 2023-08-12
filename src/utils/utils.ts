@@ -16,10 +16,10 @@ export const generateAlarmItemFromFormData = (
 	return {
 		...alarm,
 		coordinates: {
-			latitude: parseInt(latitude),
-			longitude: parseInt(longitude),
+			latitude: Number(latitude),
+			longitude: Number(longitude),
 		},
 		title,
-		radius: parseInt(radius),
+		radius: Number(radius),
 	};
 };
