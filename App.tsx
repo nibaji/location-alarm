@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Button, View, Text, Dimensions } from "react-native";
 import WebView from "react-native-webview";
+import * as Location from "expo-location";
 
 const deviceWidth = Dimensions.get("window").width;
 
@@ -9,6 +10,22 @@ export default function App() {
 		latitude: number;
 		longitude: number;
 	} | null>(null);
+
+	const [userLocation, setUserLocation] =
+		useState<Location.LocationObject | null>(null);
+	const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+	const getUserLocation = async () => {
+		let { status } = await Location.requestForegroundPermissionsAsync();
+		if (status !== "granted") {
+			setErrorMsg("Permission to access location was denied");
+			return;
+		}
+
+		let location = await Location.getCurrentPositionAsync({});
+		console.log({ location });
+		setUserLocation(location);
+	};
 
 	const getGpsCoordinates = (url: string) => {
 		const regex = /@(-?\d+\.\d+),(-?\d+\.\d+)/;
@@ -22,6 +39,10 @@ export default function App() {
 			setCoordinates(null);
 		}
 	};
+
+	useEffect(() => {
+		getUserLocation();
+	}, []);
 
 	return (
 		<View style={styles.container}>
