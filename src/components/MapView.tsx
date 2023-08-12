@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import { Button, Text } from "react-native-paper";
+import { Button, Text, Surface, Card } from "react-native-paper";
 import WebView from "react-native-webview";
 import Entypo from "react-native-vector-icons/Entypo";
 
@@ -37,7 +37,7 @@ const MapView: React.FC<MapViewPropsType> = () => {
 				originWhitelist={["https://www.google.com/maps"]}
 				onNavigationStateChange={(e) => getTargetGpsCoordinates(e.url)}
 			/>
-			<View style={mapStyle.detailsContainer}>
+			<Surface style={mapStyle.detailsContainer} mode="elevated" elevation={4}>
 				<Button
 					icon="google-maps"
 					buttonColor={paperTheme.colors.primaryContainer}
@@ -50,21 +50,29 @@ const MapView: React.FC<MapViewPropsType> = () => {
 					<Entypo name="info-with-circle" /> Search a location or Pick in the
 					map
 				</Text>
-				<View style={mapStyle.coordinatesContainer}>
-					<Text style={mapStyle.coordinateTitleText}>
-						Current Target Latitude :{" "}
+				<Card
+					style={mapStyle.coordinatesContainer}
+					mode="elevated"
+					elevation={4}
+				>
+					<View style={mapStyle.coordinateItemContainer}>
+						<Text style={mapStyle.coordinateTitleText}>
+							Current Target Latitude :{" "}
+						</Text>
 						<Text style={mapStyle.coordinateDescriptionText}>
 							{coordinates?.latitude}
 						</Text>
-					</Text>
-					<Text style={mapStyle.coordinateTitleText}>
-						Current Target longitude :{" "}
+					</View>
+					<View style={mapStyle.coordinateItemContainer}>
+						<Text style={mapStyle.coordinateTitleText}>
+							Current Target longitude :{" "}
+						</Text>
 						<Text style={mapStyle.coordinateDescriptionText}>
 							{coordinates?.longitude}
 						</Text>
-					</Text>
-				</View>
-			</View>
+					</View>
+				</Card>
+			</Surface>
 		</View>
 	);
 };
