@@ -48,13 +48,19 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 						latitude: Number(latitude),
 						longitude: Number(longitude),
 					},
-					radius: Number(radius),
+					radius: Number(radius || 0),
 					id: new Date().getMilliseconds().toString(),
 				},
 			]);
 			setFormDataDraft(null);
 			closeModal();
 		}
+	};
+
+	const pickCoordinatesFromMap = () => {
+		setFormDataDraft(formData);
+		closeModal();
+		setShowMapViewModal(true);
 	};
 
 	useEffect(() => {
@@ -80,13 +86,7 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 					onChangeText={(text) => field.onChangeText(text, field.name)}
 				/>
 			))}
-			<Button
-				onPress={() => {
-					setFormDataDraft(formData);
-					closeModal();
-					setShowMapViewModal(true);
-				}}
-			>
+			<Button onPress={pickCoordinatesFromMap}>
 				Pick Coordinates from Map
 			</Button>
 			<Divider style={locationInputStyle(theme).divider} />

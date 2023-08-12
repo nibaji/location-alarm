@@ -20,6 +20,6 @@ export const generateAlarmItemFromFormData = (
 			longitude: Number(longitude),
 		},
 		title,
-		radius: Number(radius),
+		radius: Number(radius || 0),
 	};
 };

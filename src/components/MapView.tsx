@@ -36,6 +36,18 @@ const MapView: React.FC<MapViewPropsType> = () => {
 		}
 	};
 
+	const handleSettingTargetCoordinates = () => {
+		if (coordinates?.latitude && coordinates.longitude) {
+			setFormDataDraft({
+				...formDataDraft,
+				latitude: coordinates.latitude,
+				longitude: coordinates.longitude,
+			});
+			setShowMapViewModal(false);
+			setShowManualLocationInputModal(true);
+		}
+	};
+
 	return (
 		<View style={mapStyle(theme).container}>
 			<WebView
@@ -96,17 +108,7 @@ const MapView: React.FC<MapViewPropsType> = () => {
 						textColor={theme.colors.secondary}
 						labelStyle={mapStyle(theme).buttonLabel}
 						mode="elevated"
-						onPress={() => {
-							if (coordinates?.latitude && coordinates.longitude) {
-								setFormDataDraft({
-									...formDataDraft,
-									latitude: coordinates.latitude,
-									longitude: coordinates.longitude,
-								});
-								setShowMapViewModal(false);
-								setShowManualLocationInputModal(true);
-							}
-						}}
+						onPress={handleSettingTargetCoordinates}
 					>
 						Pick the Chosen Location
 					</Button>
