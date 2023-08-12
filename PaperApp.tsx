@@ -22,6 +22,8 @@ const PaperApp = () => {
 	const [showManualLocationInputModal, setShowManualLocationInputModal] =
 		useState(false);
 
+	const [formDataDraft, setFormDataDraft] = useState(null);
+
 	const deleteAlarm = (id: string) =>
 		setAlarms(alarms.filter((_alarm) => _alarm.id !== id));
 
@@ -51,6 +53,8 @@ const PaperApp = () => {
 		setShowMapViewModal,
 		showManualLocationInputModal,
 		setShowManualLocationInputModal,
+		formDataDraft,
+		setFormDataDraft,
 	};
 
 	return (

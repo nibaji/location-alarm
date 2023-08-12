@@ -1,6 +1,8 @@
 import { MD3Theme } from "react-native-paper";
 import { LocationObject } from "expo-location";
 
+import { LocationFormDataType } from "./dataTypes";
+
 export type CoordinatesType = {
 	latitude: number;
 	longitude: number;
@@ -31,4 +33,6 @@ export type AppStateType = {
 	setShowMapViewModal: Function;
 	showManualLocationInputModal: boolean;
 	setShowManualLocationInputModal: Function;
+	formDataDraft: LocationFormDataType | null;
+	setFormDataDraft: Function;
 };

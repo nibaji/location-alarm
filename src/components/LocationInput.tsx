@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View } from "react-native";
 import { TextInput, Button, Text, Divider } from "react-native-paper";
 
@@ -14,8 +14,16 @@ import { LocationFormDataType } from "../types/dataTypes";
 import { locationInputStyle } from "../styles/styles";
 
 const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
-	const { theme, alarms, setAlarms, editAlarm, currentAlarm } =
-		useContext(AppContext);
+	const {
+		theme,
+		alarms,
+		setAlarms,
+		editAlarm,
+		currentAlarm,
+		setShowMapViewModal,
+		formDataDraft,
+		setFormDataDraft,
+	} = useContext(AppContext);
 
 	const isEdit = Boolean(currentAlarm);
 
@@ -44,10 +52,16 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 					id: new Date().getMilliseconds().toString(),
 				},
 			]);
-
+			setFormDataDraft(null);
 			closeModal();
 		}
 	};
+
+	useEffect(() => {
+		if (formDataDraft) {
+			setFormData(formDataDraft);
+		}
+	}, [formDataDraft]);
 
 	return (
 		<View style={locationInputStyle(theme).container}>
@@ -66,13 +80,25 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 					onChangeText={(text) => field.onChangeText(text, field.name)}
 				/>
 			))}
+			<Button
+				onPress={() => {
+					setFormDataDraft(formData);
+					closeModal();
+					setShowMapViewModal(true);
+				}}
+			>
+				Pick Coordinates from Map
+			</Button>
 			<Divider style={locationInputStyle(theme).divider} />
 			<View style={locationInputStyle(theme).buttonsContainer}>
 				<Button
 					mode="elevated"
 					labelStyle={locationInputStyle(theme).cancelButtonLabel}
 					style={locationInputStyle(theme).cancelButton}
-					onPress={() => closeModal()}
+					onPress={() => {
+						setFormDataDraft(null);
+						closeModal();
+					}}
 				>
 					Cancel
 				</Button>

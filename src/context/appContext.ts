@@ -19,6 +19,8 @@ export const initialAppState: AppStateType = {
 	setShowMapViewModal: () => {},
 	showManualLocationInputModal: false,
 	setShowManualLocationInputModal: () => {},
+	formDataDraft: null,
+	setFormDataDraft: () => {},
 };
 
 export const AppContext = createContext(initialAppState);

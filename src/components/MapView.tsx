@@ -10,10 +10,16 @@ import { MapViewPropsType } from "../types/propTypes";
 import { CoordinatesType } from "../types/stateTypes";
 
 import { mapStyle } from "../styles/styles";
-import { dark } from "../styles/paperTheme";
 
 const MapView: React.FC<MapViewPropsType> = () => {
-	const { theme, currentLocation } = useContext(AppContext);
+	const {
+		theme,
+		currentLocation,
+		setShowMapViewModal,
+		setShowManualLocationInputModal,
+		formDataDraft,
+		setFormDataDraft,
+	} = useContext(AppContext);
 
 	const [coordinates, setCoordinates] = useState<CoordinatesType>(null);
 
@@ -48,17 +54,9 @@ const MapView: React.FC<MapViewPropsType> = () => {
 				mode="elevated"
 				elevation={4}
 			>
-				<Button
-					icon="google-maps"
-					buttonColor={dark.colors.primaryContainer}
-					textColor={dark.colors.secondary}
-					labelStyle={mapStyle(theme).buttonLabel}
-				>
-					Pick the Chosen Location
-				</Button>
 				<Text style={mapStyle(theme).hintText}>
-					<Entypo name="info-with-circle" /> Search a location or Pick in the
-					map
+					<Entypo name="info-with-circle" /> Drag and tap on the desired
+					location in "Query Feature" to get the latitude and longitude.
 				</Text>
 				<Card
 					style={mapStyle(theme).coordinatesContainer}
@@ -82,6 +80,37 @@ const MapView: React.FC<MapViewPropsType> = () => {
 						</Text>
 					</View>
 				</Card>
+
+				<View style={mapStyle(theme).buttonsContainer}>
+					<Button
+						buttonColor={theme.colors.errorContainer}
+						textColor={theme.colors.error}
+						mode="elevated"
+						onPress={() => setShowMapViewModal(false)}
+					>
+						Cancel
+					</Button>
+					<Button
+						icon="google-maps"
+						buttonColor={theme.colors.primaryContainer}
+						textColor={theme.colors.secondary}
+						labelStyle={mapStyle(theme).buttonLabel}
+						mode="elevated"
+						onPress={() => {
+							if (coordinates?.latitude && coordinates.longitude) {
+								setFormDataDraft({
+									...formDataDraft,
+									latitude: coordinates.latitude,
+									longitude: coordinates.longitude,
+								});
+								setShowMapViewModal(false);
+								setShowManualLocationInputModal(true);
+							}
+						}}
+					>
+						Pick the Chosen Location
+					</Button>
+				</View>
 			</Surface>
 		</View>
 	);

@@ -9,7 +9,7 @@ import AlarmsList from "./src/components/AlarmsList";
 
 import { AppContext } from "./src/context/appContext";
 
-import { appStyle, locationInputStyle } from "./src/styles/styles";
+import { appStyle, locationInputStyle, mapStyle } from "./src/styles/styles";
 import { dark, light } from "./src/styles/paperTheme";
 
 export const App: React.FC = () => {
@@ -21,6 +21,7 @@ export const App: React.FC = () => {
 		setTheme,
 		setCurrentAlarm,
 		showMapViewModal,
+		setShowMapViewModal,
 		showManualLocationInputModal,
 		setShowManualLocationInputModal,
 	} = useContext(AppContext);
@@ -37,7 +38,7 @@ export const App: React.FC = () => {
 		console.log({ location });
 	};
 
-	const closeModal = () => {
+	const closeManualModal = () => {
 		setCurrentAlarm(undefined);
 		setShowManualLocationInputModal(false);
 	};
@@ -73,12 +74,16 @@ export const App: React.FC = () => {
 			)}
 			<Modal
 				visible={showManualLocationInputModal}
-				onDismiss={closeModal}
+				onDismiss={closeManualModal}
 				contentContainerStyle={locationInputStyle(theme).modalContainer}
 			>
-				<LocationInput closeModal={closeModal} />
+				<LocationInput closeModal={closeManualModal} />
 			</Modal>
-			<Modal visible={showMapViewModal}>
+			<Modal
+				visible={showMapViewModal}
+				onDismiss={() => setShowMapViewModal(false)}
+				contentContainerStyle={mapStyle(theme).modalContainer}
+			>
 				<MapView />
 			</Modal>
 		</View>

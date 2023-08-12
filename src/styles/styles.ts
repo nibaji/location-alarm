@@ -21,6 +21,11 @@ export const appStyle = (theme: MD3Theme) =>
 
 export const mapStyle = (theme: MD3Theme) =>
 	StyleSheet.create({
+		modalContainer: {
+			height: deviceHeight,
+			alignItems: "center",
+			justifyContent: "center",
+		},
 		container: {
 			flex: 1,
 			backgroundColor: theme.colors.background,
@@ -32,15 +37,19 @@ export const mapStyle = (theme: MD3Theme) =>
 			width: deviceWidth,
 		},
 		detailsContainer: {
-			flex: 0.28,
+			flex: 0.24,
 			backgroundColor: theme.colors.secondary,
 			justifyContent: "center",
 			alignItems: "center",
 			width: deviceWidth,
-			padding: 16,
+			padding: 8,
+		},
+		buttonsContainer: {
+			flexDirection: "row",
+			justifyContent: "space-between",
 		},
 		buttonLabel: {
-			padding: 4,
+			padding: 2,
 			fontWeight: "bold",
 			textTransform: "uppercase",
 		},
@@ -48,23 +57,20 @@ export const mapStyle = (theme: MD3Theme) =>
 			color: theme.colors.primaryContainer,
 			fontSize: 12,
 			margin: 2,
-			marginBottom: 8,
-			marginLeft: 16,
 			padding: 2,
-			borderRadius: theme.roundness,
-			textAlign: "center",
+			textAlign: "justify",
 		},
 		coordinatesContainer: {
 			borderRadius: theme.roundness,
-			paddingHorizontal: 24,
-			paddingVertical: 16,
-			margin: 8,
+			paddingHorizontal: 16,
+			paddingVertical: 8,
+			marginVertical: 8,
 			minWidth: "80%",
 		},
 		coordinateItemContainer: {
 			flexDirection: "row",
 			justifyContent: "space-between",
-			marginBottom: 4,
+			marginBottom: 2,
 		},
 		coordinateTitleText: {
 			color: theme.colors.secondary,
