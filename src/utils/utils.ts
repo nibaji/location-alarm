@@ -15,7 +15,7 @@ export const generateAlarmItemFromFormData = (
 	const { latitude, longitude, title, radius } = formData;
 	return {
 		...alarm,
-		coordinates: {
+		location: {
 			latitude: Number(latitude),
 			longitude: Number(longitude),
 		},
