@@ -20,6 +20,7 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 		setAlarms,
 		editAlarm,
 		currentAlarm,
+		setCurrentAlarm,
 		setShowMapViewModal,
 		formDataDraft,
 		setFormDataDraft,
@@ -59,7 +60,7 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 
 	const pickCoordinatesFromMap = () => {
 		setFormDataDraft(formData);
-		closeModal();
+		closeModal(true);
 		setShowMapViewModal(true);
 	};
 

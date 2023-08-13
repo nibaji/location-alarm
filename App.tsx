@@ -40,8 +40,10 @@ export const App: React.FC = () => {
 		console.log({ location });
 	};
 
-	const closeManualModal = () => {
-		setCurrentAlarm(undefined);
+	const closeManualModal = (preserveCurrentAlarm: boolean = false) => {
+		if (!preserveCurrentAlarm) {
+			setCurrentAlarm(undefined);
+		}
 		setShowManualLocationInputModal(false);
 	};
 
