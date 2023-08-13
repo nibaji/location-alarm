@@ -14,7 +14,6 @@ const triggerAlarm = async (params) => {
 	const { delay, alarm } = params;
 	await new Promise(async (resolve) => {
 		do {
-			await sleep(delay);
 			const {
 				radius,
 				location: { latitude, longitude },
@@ -41,6 +40,7 @@ const triggerAlarm = async (params) => {
 				await BackgroundService.stop();
 				resolve();
 			}
+			await sleep(delay);
 		} while (BackgroundService.isRunning());
 	});
 };
