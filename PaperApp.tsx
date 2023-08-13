@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { PaperProvider } from "react-native-paper";
+import { PaperProvider, MD3Theme } from "react-native-paper";
 import { LocationObject } from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -12,7 +12,7 @@ import { AlarmItemType, AlarmsType } from "./src/types/stateTypes";
 import { dark } from "./src/styles/paperTheme";
 
 const PaperApp = () => {
-	const [theme, setTheme] = useState(dark);
+	const [theme, setTheme] = useState<MD3Theme | undefined>();
 	const [currentLocation, setCurrentLocation] = useState<LocationObject | null>(
 		null
 	);
@@ -38,6 +38,23 @@ const PaperApp = () => {
 			})
 		);
 
+	const saveThemeToAsync = async () => {
+		try {
+			await AsyncStorage.setItem("theme", JSON.stringify(theme));
+		} catch (e) {
+			console.log(e, "Theme Set Async");
+		}
+	};
+
+	const hydrateThemeFromAsync = async () => {
+		try {
+			const theTheme = await AsyncStorage.getItem("theme");
+			if (theTheme) setTheme(JSON.parse(theTheme));
+		} catch (e) {
+			console.log(e, "Alarms Get Async");
+		}
+	};
+
 	const saveAlarmsToAsync = async () => {
 		try {
 			await AsyncStorage.setItem("alarms", JSON.stringify(alarms));
@@ -49,7 +66,8 @@ const PaperApp = () => {
 	const hydrateAlarmsFromAsync = async () => {
 		try {
 			const theAlarms = await AsyncStorage.getItem("alarms");
-			if (theAlarms) setAlarms(JSON.parse(theAlarms));
+			console.log({ theAlarms, alarms: theAlarms && JSON.parse(theAlarms) });
+			if (theAlarms) setAlarms([...JSON.parse(theAlarms)]);
 		} catch (e) {
 			console.log(e, "Alarms Get Async");
 		}
@@ -78,15 +96,17 @@ const PaperApp = () => {
 
 	useEffect(() => {
 		saveAlarmsToAsync();
-	}, [JSON.stringify(alarms)]);
+		saveThemeToAsync();
+	}, [JSON.stringify(alarms), theme]);
 
 	useEffect(() => {
 		hydrateAlarmsFromAsync();
+		hydrateThemeFromAsync();
 	}, []);
 
 	return (
 		<AppContext.Provider value={value}>
-			<PaperProvider theme={value.theme}>
+			<PaperProvider theme={value?.theme || dark}>
 				<App />
 			</PaperProvider>
 		</AppContext.Provider>

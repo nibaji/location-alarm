@@ -19,7 +19,7 @@ export type AlarmItemType = {
 export type AlarmsType = AlarmItemType[];
 
 export type AppStateType = {
-	theme: MD3Theme;
+	theme?: MD3Theme;
 	setTheme: Function;
 	currentLocation: LocationObject | null;
 	setCurrentLocation: Function;

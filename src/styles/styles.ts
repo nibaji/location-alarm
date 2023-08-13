@@ -1,10 +1,12 @@
 import { StyleSheet, Dimensions } from "react-native";
 import { MD3Theme } from "react-native-paper";
 
+import { dark } from "./paperTheme";
+
 const deviceWidth = Dimensions.get("window").width;
 const deviceHeight = Dimensions.get("window").height;
 
-export const appStyle = (theme: MD3Theme) =>
+export const appStyle = (theme: MD3Theme = dark) =>
 	StyleSheet.create({
 		container: {
 			flex: 1,
@@ -19,7 +21,7 @@ export const appStyle = (theme: MD3Theme) =>
 		},
 	});
 
-export const mapStyle = (theme: MD3Theme) =>
+export const mapStyle = (theme: MD3Theme = dark) =>
 	StyleSheet.create({
 		modalContainer: {
 			height: deviceHeight,
@@ -84,7 +86,7 @@ export const mapStyle = (theme: MD3Theme) =>
 		},
 	});
 
-export const locationInputStyle = (theme: MD3Theme) =>
+export const locationInputStyle = (theme: MD3Theme = dark) =>
 	StyleSheet.create({
 		modalContainer: {
 			alignItems: "center",
@@ -120,7 +122,7 @@ export const locationInputStyle = (theme: MD3Theme) =>
 		},
 	});
 
-export const alarmListStyle = (theme: MD3Theme) =>
+export const alarmListStyle = (theme: MD3Theme = dark) =>
 	StyleSheet.create({
 		emptyTextWrapper: {
 			display: "flex",
@@ -133,7 +135,7 @@ export const alarmListStyle = (theme: MD3Theme) =>
 		},
 	});
 
-export const alarmListItemStyle = (theme: MD3Theme) =>
+export const alarmListItemStyle = (theme: MD3Theme = dark) =>
 	StyleSheet.create({
 		container: {
 			width: deviceWidth * 0.85,

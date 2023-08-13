@@ -60,7 +60,11 @@ export const App: React.FC = () => {
 			<Appbar>
 				<Text variant="headlineSmall"> Location Alarm</Text>
 				<Appbar.Action
-					icon={theme === dark ? "lightbulb-on" : "lightbulb-on-outline"}
+					icon={
+						JSON.stringify(theme) === JSON.stringify(dark)
+							? "lightbulb-on"
+							: "lightbulb-on-outline"
+					}
 					onPress={() => setTheme(theme === dark ? light : dark)}
 				/>
 			</Appbar>
