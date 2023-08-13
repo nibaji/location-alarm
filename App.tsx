@@ -11,6 +11,7 @@ import { AppContext } from "./src/context/appContext";
 
 import { appStyle, locationInputStyle, mapStyle } from "./src/styles/styles";
 import { dark, light } from "./src/styles/paperTheme";
+import { triggerGPSPolling } from "./src/utils/backgroundTask";
 
 export const App: React.FC = () => {
 	const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -19,6 +20,7 @@ export const App: React.FC = () => {
 		setCurrentLocation,
 		theme,
 		setTheme,
+		alarms,
 		setCurrentAlarm,
 		showMapViewModal,
 		setShowMapViewModal,
@@ -42,6 +44,10 @@ export const App: React.FC = () => {
 		setCurrentAlarm(undefined);
 		setShowManualLocationInputModal(false);
 	};
+
+	useEffect(() => {
+		triggerGPSPolling(alarms);
+	}, [JSON.stringify(alarms)]);
 
 	useEffect(() => {
 		getUserLocation();

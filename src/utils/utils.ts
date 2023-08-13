@@ -23,3 +23,37 @@ export const generateAlarmItemFromFormData = (
 		radius: Number(radius || 0),
 	};
 };
+
+// https://stackoverflow.com/a/27943
+export const getDistanceBetween2LatsLongsInMeters = (
+	userLatitude: number,
+	userLongitude: number,
+	targetLatitude: number,
+	targetLongitude: number
+) => {
+	const earthRadius = 6371000; // Radius of the Earth in meters
+
+	const degToRad = (degrees: number) => {
+		return degrees * (Math.PI / 180);
+	};
+
+	const latitudeDifference = degToRad(targetLatitude - userLatitude);
+	const longitudeDifference = degToRad(targetLongitude - userLongitude);
+
+	const squareHalfLatitudeDifference =
+		Math.sin(latitudeDifference / 2) * Math.sin(latitudeDifference / 2);
+	const squareHalfLongitudeDifference =
+		Math.sin(longitudeDifference / 2) * Math.sin(longitudeDifference / 2);
+
+	const haversineTerm =
+		squareHalfLatitudeDifference +
+		Math.cos(degToRad(userLatitude)) *
+			Math.cos(degToRad(targetLatitude)) *
+			squareHalfLongitudeDifference;
+
+	const angularDistance =
+		2 * Math.atan2(Math.sqrt(haversineTerm), Math.sqrt(1 - haversineTerm));
+
+	const distance = earthRadius * angularDistance; // Distance in meters
+	return distance;
+};
