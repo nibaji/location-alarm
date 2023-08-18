@@ -32,7 +32,6 @@ const MapView: React.FC<MapViewPropsType> = () => {
 		if (match) {
 			const latitude = parseFloat(match[1]);
 			const longitude = parseFloat(match[2]);
-			console.log({ latitude, longitude, url });
 			setCoordinates({ latitude, longitude });
 		} else {
 			setCoordinates(null);
@@ -41,9 +40,9 @@ const MapView: React.FC<MapViewPropsType> = () => {
 
 	const script = `
 	  var queryButton = document.querySelector('[data-bs-original-title="Query features"]');
-	  if (queryButton && && !queryButton.classList.contains('clicked')) {
-		queryButton.click();
-		queryButton.classList.add('clicked');
+	  if (queryButton && !queryButton.classList.contains('clicked')) {
+		  queryButton.click();
+		  queryButton.classList.add('clicked');
 	  }
 	  true;
 	`;
@@ -100,8 +99,8 @@ const MapView: React.FC<MapViewPropsType> = () => {
 				elevation={4}
 			>
 				<Text style={mapStyle(theme).hintText}>
-					<Entypo name="info-with-circle" /> Toggle the Above button and tap on
-					the desired location to get the latitude and longitude.
+					<Entypo name="info-with-circle" /> Tap on the desired location to get
+					the latitude and longitude.
 				</Text>
 				<Card
 					style={mapStyle(theme).coordinatesContainer}
@@ -113,7 +112,7 @@ const MapView: React.FC<MapViewPropsType> = () => {
 							Current Target Latitude :{" "}
 						</Text>
 						<Text style={mapStyle(theme).coordinateDescriptionText}>
-							{coordinates?.latitude}
+							{coordinates?.latitude ?? "N/A"}
 						</Text>
 					</View>
 					<View style={mapStyle(theme).coordinateItemContainer}>
@@ -121,7 +120,7 @@ const MapView: React.FC<MapViewPropsType> = () => {
 							Current Target longitude :{" "}
 						</Text>
 						<Text style={mapStyle(theme).coordinateDescriptionText}>
-							{coordinates?.longitude}
+							{coordinates?.longitude ?? "N/A"}
 						</Text>
 					</View>
 				</Card>
@@ -144,7 +143,7 @@ const MapView: React.FC<MapViewPropsType> = () => {
 						mode="elevated"
 						onPress={handleSettingTargetCoordinates}
 					>
-						Pick the Chosen Location
+						Confirm location
 					</Button>
 				</View>
 			</Surface>

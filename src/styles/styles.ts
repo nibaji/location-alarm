@@ -52,7 +52,8 @@ export const mapStyle = (theme: MD3Theme = dark) =>
 		},
 		buttonsContainer: {
 			flexDirection: "row",
-			justifyContent: "space-between",
+			justifyContent: "space-around",
+			width: "100%",
 		},
 		buttonLabel: {
 			padding: 2,
