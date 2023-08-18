@@ -13,17 +13,17 @@ export type AlarmItemType = {
 	location: CoordinatesType;
 	radius: number;
 	active: boolean;
-	id: string; // date in millisecond string
+	id: string; // date string
 };
 
-export type AlarmsType = AlarmItemType[];
+export type AlarmsType = Record<string, AlarmItemType>;
 
 export type AppStateType = {
 	theme?: MD3Theme;
 	setTheme: Function;
 	currentLocation: LocationObject | null;
 	setCurrentLocation: Function;
-	alarms: AlarmItemType[];
+	alarms: AlarmsType;
 	setAlarms: Function;
 	saveAlarmsToAsync: Function;
 	deleteAlarm: Function;

@@ -20,7 +20,6 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 		setAlarms,
 		editAlarm,
 		currentAlarm,
-		setCurrentAlarm,
 		setShowMapViewModal,
 		formDataDraft,
 		setFormDataDraft,
@@ -29,7 +28,7 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 	const isEdit = Boolean(currentAlarm);
 
 	const [formData, setFormData] = useState<LocationFormDataType>({
-		title: currentAlarm?.title || " ",
+		title: currentAlarm?.title || "",
 		latitude: currentAlarm?.location?.latitude.toString() || "",
 		longitude: currentAlarm?.location?.longitude.toString() || "",
 		radius: currentAlarm?.radius.toString() || "",
@@ -41,18 +40,20 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 	const setNewAlarm = () => {
 		const { title, latitude, longitude, radius } = formData;
 		if (formData.title && formData.latitude && formData.longitude) {
-			setAlarms([
+			const newId = new Date().toString();
+
+			setAlarms({
 				...alarms,
-				{
+				[newId]: {
 					title,
 					location: {
 						latitude: Number(latitude),
 						longitude: Number(longitude),
 					},
-					radius: Number(radius || 0),
-					id: new Date().toString(),
+					radius: Number(radius) | 0,
+					id: newId,
 				},
-			]);
+			});
 			setFormDataDraft(null);
 			closeModal();
 		}

@@ -16,7 +16,7 @@ const PaperApp = () => {
 	const [currentLocation, setCurrentLocation] = useState<LocationObject | null>(
 		null
 	);
-	const [alarms, setAlarms] = useState<AlarmsType>([]);
+	const [alarms, setAlarms] = useState<AlarmsType>({});
 	const [currentAlarm, setCurrentAlarm] = useState<AlarmItemType | undefined>();
 
 	const [showMapViewModal, setShowMapViewModal] = useState(false);
@@ -25,18 +25,17 @@ const PaperApp = () => {
 
 	const [formDataDraft, setFormDataDraft] = useState(null);
 
-	const deleteAlarm = (id: string) =>
-		setAlarms(alarms.filter((_alarm) => _alarm.id !== id));
+	const deleteAlarm = (id: string) => {
+		const newAlarmsMap = { ...alarms };
+		delete alarms?.[id];
+		setAlarms(newAlarmsMap);
+	};
 
 	const editAlarm = (id: string, newAlarmData: AlarmItemType) =>
-		setAlarms(
-			alarms.map((_alarm) => {
-				if (_alarm.id === id) {
-					return newAlarmData;
-				}
-				return _alarm;
-			})
-		);
+		setAlarms({
+			...alarms,
+			[id]: newAlarmData,
+		});
 
 	const saveThemeToAsync = async () => {
 		try {
@@ -67,7 +66,7 @@ const PaperApp = () => {
 		try {
 			const theAlarms = await AsyncStorage.getItem("alarms");
 			console.log({ theAlarms, alarms: theAlarms && JSON.parse(theAlarms) });
-			if (theAlarms) setAlarms([...JSON.parse(theAlarms)]);
+			if (theAlarms) setAlarms(JSON.parse(theAlarms));
 		} catch (e) {
 			console.log(e, "Alarms Get Async");
 		}

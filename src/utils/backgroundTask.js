@@ -45,11 +45,13 @@ const triggerAlarm = async (params) => {
 				await BackgroundService.updateNotification({
 					taskDesc: `Reached ${alarm.title}`,
 				});
-				setAlarms(
-					[...alarms].map((_alarm) =>
-						_alarm.id === alarm.id ? { ..._alarm, active: false } : _alarm
-					)
-				);
+				setAlarms({
+					...alarms,
+					[alarm.id]: {
+						...alarm,
+						active: false,
+					},
+				});
 				this.active = false;
 				// BackgroundService.stop().then(() => console.log("stopped"));
 			}
@@ -76,7 +78,7 @@ export const triggerGPSPolling = async (alarms, setAlarms, theme) => {
 			setAlarms,
 		},
 	});
-	alarms.forEach(async (alarm) => {
+	Object.values(alarms).forEach(async (alarm) => {
 		if (alarm.active) {
 			console.log("starting", { alarm });
 			await BackgroundService.start(triggerAlarm, options(alarm));
