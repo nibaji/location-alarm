@@ -1,7 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import { View } from "react-native";
 import { Button, Text, Surface, Card } from "react-native-paper";
-import WebView from "react-native-webview";
+import WebView, { WebViewNavigation } from "react-native-webview";
 import Entypo from "react-native-vector-icons/Entypo";
 
 import { AppContext } from "../context/appContext";
@@ -22,6 +22,9 @@ const MapView: React.FC<MapViewPropsType> = () => {
 	} = useContext(AppContext);
 
 	const [coordinates, setCoordinates] = useState<CoordinatesType>(null);
+	const [webViewLoaded, setWebViewLoaded] = useState(false);
+
+	const webRef = useRef(null);
 
 	const getTargetGpsCoordinates = (url: string) => {
 		const regex = /lat=(-?\d+\.\d+)&lon=(-?\d+\.\d+)/;
@@ -36,6 +39,28 @@ const MapView: React.FC<MapViewPropsType> = () => {
 		}
 	};
 
+	const script = `
+	  var queryButton = document.querySelector('[data-bs-original-title="Query features"]');
+	  if (queryButton && && !queryButton.classList.contains('clicked')) {
+		queryButton.click();
+		queryButton.classList.add('clicked');
+	  }
+	  true;
+	`;
+
+	const runScript = () =>
+		webRef.current && webRef.current.injectJavaScript(script);
+
+	const handleOnLoad = () => {
+		setWebViewLoaded(true);
+		runScript();
+	};
+
+	const handleNavigationStateChange = (e: WebViewNavigation) => {
+		getTargetGpsCoordinates(e.url);
+		runScript();
+	};
+
 	const handleSettingTargetCoordinates = () => {
 		if (coordinates?.latitude && coordinates.longitude) {
 			setFormDataDraft({
@@ -48,18 +73,26 @@ const MapView: React.FC<MapViewPropsType> = () => {
 		}
 	};
 
+	useEffect(() => {
+		if (webViewLoaded) {
+			runScript();
+		}
+	}, [webViewLoaded]);
+
 	return (
 		<View style={mapStyle(theme).container}>
 			<WebView
 				style={mapStyle(theme).webView}
+				ref={webRef}
 				source={{
 					uri: `https://www.openstreetmap.org/query?lat=${currentLocation?.coords.latitude}&lon=${currentLocation?.coords.longitude}`,
 				}}
 				scrollEnabled
+				onLoad={handleOnLoad}
 				geolocationEnabled
 				androidLayerType="hardware"
 				originWhitelist={["https://www.openstreetmap.org/query?"]}
-				onNavigationStateChange={(e) => getTargetGpsCoordinates(e.url)}
+				onNavigationStateChange={handleNavigationStateChange}
 			/>
 			<Surface
 				style={mapStyle(theme).detailsContainer}
@@ -67,8 +100,8 @@ const MapView: React.FC<MapViewPropsType> = () => {
 				elevation={4}
 			>
 				<Text style={mapStyle(theme).hintText}>
-					<Entypo name="info-with-circle" /> Drag and tap on the desired
-					location in "Query Feature" to get the latitude and longitude.
+					<Entypo name="info-with-circle" /> Toggle the Above button and tap on
+					the desired location to get the latitude and longitude.
 				</Text>
 				<Card
 					style={mapStyle(theme).coordinatesContainer}
@@ -95,17 +128,18 @@ const MapView: React.FC<MapViewPropsType> = () => {
 
 				<View style={mapStyle(theme).buttonsContainer}>
 					<Button
-						buttonColor={theme.colors.errorContainer}
-						textColor={theme.colors.error}
+						buttonColor={theme?.colors.errorContainer}
+						textColor={theme?.colors.error}
 						mode="elevated"
 						onPress={() => setShowMapViewModal(false)}
 					>
 						Cancel
 					</Button>
+
 					<Button
 						icon="google-maps"
-						buttonColor={theme.colors.primaryContainer}
-						textColor={theme.colors.secondary}
+						buttonColor={theme?.colors.primaryContainer}
+						textColor={theme?.colors.secondary}
 						labelStyle={mapStyle(theme).buttonLabel}
 						mode="elevated"
 						onPress={handleSettingTargetCoordinates}
