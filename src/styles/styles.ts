@@ -19,6 +19,10 @@ export const appStyle = (theme: MD3Theme = dark) =>
 			position: "absolute",
 			bottom: "4%",
 		},
+		errorText: {
+			color: theme.colors.error,
+			textAlign: "center",
+		},
 	});
 
 export const mapStyle = (theme: MD3Theme = dark) =>

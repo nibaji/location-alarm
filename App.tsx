@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View } from "react-native";
+import { View, PermissionsAndroid, Linking } from "react-native";
 import * as Location from "expo-location";
 import { Modal, Appbar, Text, FAB } from "react-native-paper";
 
@@ -13,6 +13,14 @@ import { appStyle, locationInputStyle, mapStyle } from "./src/styles/styles";
 import { dark, light } from "./src/styles/paperTheme";
 import { triggerGPSPolling } from "./src/utils/backgroundTask";
 
+// Linking.addEventListener("url", handleOpenURL);
+
+// function handleOpenURL(evt: any) {
+// 	// Will be called when the notification is pressed
+// 	console.log(evt);
+// 	// do something
+// }
+
 export const App: React.FC = () => {
 	const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -21,6 +29,7 @@ export const App: React.FC = () => {
 		theme,
 		setTheme,
 		alarms,
+		setAlarms,
 		setCurrentAlarm,
 		showMapViewModal,
 		setShowMapViewModal,
@@ -37,7 +46,29 @@ export const App: React.FC = () => {
 
 		let location = await Location.getCurrentPositionAsync({});
 		setCurrentLocation(location);
-		console.log({ location });
+	};
+
+	const getAllPermissions = async function requestPostNotification() {
+		try {
+			const granted = await PermissionsAndroid.request(
+				PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+				{
+					title: "Notification",
+					message: "Please allow to show notifications",
+					buttonNeutral: "Ask Me Later",
+					buttonNegative: "Cancel",
+					buttonPositive: "OK",
+				}
+			);
+			if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+				await getUserLocation();
+			} else {
+				setErrorMsg("Notification Error");
+			}
+		} catch (err) {
+			setErrorMsg("Some Error");
+			console.warn(err);
+		}
 	};
 
 	const closeManualModal = (preserveCurrentAlarm: boolean = false) => {
@@ -48,11 +79,11 @@ export const App: React.FC = () => {
 	};
 
 	useEffect(() => {
-		triggerGPSPolling(alarms);
+		triggerGPSPolling(alarms, setAlarms, theme);
 	}, [JSON.stringify(alarms)]);
 
 	useEffect(() => {
-		getUserLocation();
+		getAllPermissions();
 	}, []);
 
 	return (
@@ -69,7 +100,10 @@ export const App: React.FC = () => {
 				/>
 			</Appbar>
 			{errorMsg ? (
-				<Text>Please Grant Location Permission for the app to work!</Text>
+				<Text style={appStyle(theme).errorText}>
+					Please Grant Location and Notification Permissions for the app to
+					work!
+				</Text>
 			) : (
 				<>
 					<AlarmsList />

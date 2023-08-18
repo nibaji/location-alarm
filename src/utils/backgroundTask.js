@@ -1,3 +1,4 @@
+import { Vibration } from "react-native";
 import BackgroundService from "react-native-background-actions";
 import * as Location from "expo-location";
 
@@ -11,8 +12,9 @@ const sleep = (time) =>
 // React Native will go into "paused" mode (unless there are other tasks running,
 // or there is a foreground app).
 const triggerAlarm = async (params) => {
-	const { delay, alarm } = params;
-	await new Promise(async (resolve) => {
+	const { delay, alarm, alarms, setAlarms } = params;
+	await new Promise(async () => {
+		this.active = true;
 		do {
 			const {
 				radius,
@@ -32,20 +34,31 @@ const triggerAlarm = async (params) => {
 				alarm,
 				time: new Date(),
 			});
+
 			if (distance <= radius) {
 				console.log("destination reached", { distance, alarm });
+
+				for (let i = 0; i < 80; i++) {
+					Vibration.vibrate();
+				}
+
 				await BackgroundService.updateNotification({
-					taskDesc: "done",
+					taskDesc: `Reached ${alarm.title}`,
 				});
-				await BackgroundService.stop();
-				resolve();
+				setAlarms(
+					alarms.map((_alarm) =>
+						_alarm.id === alarm.id ? { ...alarm, active: false } : alarm
+					)
+				);
+				this.active = false;
+				// BackgroundService.stop().then(() => console.log("stopped"));
 			}
 			await sleep(delay);
-		} while (BackgroundService.isRunning());
+		} while (BackgroundService.isRunning() && this.active);
 	});
 };
 
-export const triggerGPSPolling = async (alarms) => {
+export const triggerGPSPolling = async (alarms, setAlarms, theme) => {
 	const options = (alarm) => ({
 		taskName: "Geo Alarm",
 		taskTitle: "Geo Alarm",
@@ -54,14 +67,16 @@ export const triggerGPSPolling = async (alarms) => {
 			name: "ic_launcher",
 			type: "mipmap",
 		},
-		color: "grey",
-		// linkingURI: "yourSchemeHere://chat/jane", // See Deep Linking for more info
+		color: theme.colors.primaryContainer,
+		linkingURI: `geoAlarm://alarm?id=${alarm.id}`,
 		parameters: {
 			delay: 5000,
 			alarm,
+			alarms,
+			setAlarms,
 		},
 	});
-	alarms.map(async (alarm) => {
+	alarms.forEach(async (alarm) => {
 		if (alarm.active) {
 			console.log("starting", { alarm });
 			await BackgroundService.start(triggerAlarm, options(alarm));

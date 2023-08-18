@@ -10,6 +10,8 @@
   <!-- rn-bg-tasks -->
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission android:name="android.permission.WAKE_LOCK" />
+  <!-- Notification permission -->
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
   <!-- END OPTIONAL PERMISSIONS -->
 
   <queries>
@@ -28,6 +30,12 @@
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+      <intent-filter android:label="filter_react_native">
+          <action android:name="android.intent.action.VIEW" />
+          <category android:name="android.intent.category.DEFAULT" />
+          <category android:name="android.intent.category.BROWSABLE" />
+          <data android:scheme="geoAlarm" />
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>
