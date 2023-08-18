@@ -50,7 +50,7 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 						longitude: Number(longitude),
 					},
 					radius: Number(radius || 0),
-					id: new Date().getMilliseconds().toString(),
+					id: new Date().toString(),
 				},
 			]);
 			setFormDataDraft(null);

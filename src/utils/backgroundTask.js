@@ -46,8 +46,8 @@ const triggerAlarm = async (params) => {
 					taskDesc: `Reached ${alarm.title}`,
 				});
 				setAlarms(
-					alarms.map((_alarm) =>
-						_alarm.id === alarm.id ? { ...alarm, active: false } : alarm
+					[...alarms].map((_alarm) =>
+						_alarm.id === alarm.id ? { ..._alarm, active: false } : _alarm
 					)
 				);
 				this.active = false;
