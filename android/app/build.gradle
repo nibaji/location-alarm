@@ -110,6 +110,13 @@ android {
             shrinkResources (findProperty('android.enableShrinkResourcesInReleaseBuilds')?.toBoolean() ?: false)
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def flavor = variant.name
+                    def formattedDate = new Date().format('yyyyMMdd-HHmm')
+                    outputFileName = "locationAlarm_${flavor}-${formattedDate}.apk"
+                }
+            }
         }
     }
 }
