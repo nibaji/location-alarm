@@ -41,16 +41,19 @@ const AlarmListItem: React.FC<AlarmListItemType> = ({ alarm }) => {
 			mode="elevated"
 			elevation={1}
 		>
-			<>
-				<Text variant="titleMedium">{alarm.title}</Text>
+			<Text style={alarmListItemStyle(theme).titleText}>{alarm.title}</Text>
+			<Divider style={alarmListItemStyle(theme).divider} />
+			<View style={alarmListItemStyle(theme).detailsContainer}>
 				<View style={alarmListItemStyle(theme).locationContainer}>
 					<Text>Location : </Text>
 					<Text variant="titleSmall">{`${alarm.location?.latitude}, ${alarm.location?.longitude}`}</Text>
 				</View>
 				<Text variant="titleSmall">
-					Triggers around {alarm.radius}m radius.
+					{alarm.radius
+						? `Triggers around ${alarm.radius}m radius.`
+						: "Triggers on reaching the exact location"}
 				</Text>
-			</>
+			</View>
 			<Divider style={alarmListItemStyle(theme).divider} />
 
 			<View style={alarmListItemStyle(theme).buttonsContainer}>

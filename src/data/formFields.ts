@@ -5,7 +5,7 @@ export const locationFormFields: LocationInputFormFieldsType = (
 	onChangeText
 ) => [
 	{
-		label: "Title",
+		label: "Location Name",
 		name: "title",
 		value: formData.title,
 		inputMode: "text",

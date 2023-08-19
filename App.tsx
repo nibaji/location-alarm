@@ -83,23 +83,24 @@ export const App: React.FC = () => {
 	return (
 		<SafeAreaView style={appStyle(theme).app}>
 			<StatusBar />
+			<Appbar style={appStyle(theme).appBar}>
+				<Appbar.Content
+					title="Geo Alarm"
+					titleStyle={appStyle(theme).titleText}
+					mode="large"
+					color={theme?.colors.primary}
+				/>
+				<Appbar.Action
+					icon={
+						JSON.stringify(theme) === JSON.stringify(dark)
+							? "weather-night"
+							: "white-balance-sunny"
+					}
+					color={theme?.colors.primary}
+					onPress={() => setTheme(theme === dark ? light : dark)}
+				/>
+			</Appbar>
 			<View style={appStyle(theme).container}>
-				<Appbar>
-					<Appbar.Content
-						title="Geo Alarm"
-						mode="large"
-						color={theme?.colors.primary}
-					/>
-					<Appbar.Action
-						icon={
-							JSON.stringify(theme) === JSON.stringify(dark)
-								? "weather-night"
-								: "white-balance-sunny"
-						}
-						color={theme?.colors.primary}
-						onPress={() => setTheme(theme === dark ? light : dark)}
-					/>
-				</Appbar>
 				{errorMsg ? (
 					<Text style={appStyle(theme).errorText}>
 						Please Grant Location and Notification Permissions for the app to
@@ -117,21 +118,21 @@ export const App: React.FC = () => {
 						/>
 					</>
 				)}
-				<Modal
-					visible={showManualLocationInputModal}
-					onDismiss={closeManualModal}
-					contentContainerStyle={locationInputStyle(theme).modalContainer}
-				>
-					<LocationInput closeModal={closeManualModal} />
-				</Modal>
-				<Modal
-					visible={showMapViewModal}
-					onDismiss={() => setShowMapViewModal(false)}
-					contentContainerStyle={mapStyle(theme).modalContainer}
-				>
-					<MapView />
-				</Modal>
 			</View>
+			<Modal
+				visible={showManualLocationInputModal}
+				onDismiss={closeManualModal}
+				contentContainerStyle={locationInputStyle(theme).modalContainer}
+			>
+				<LocationInput closeModal={closeManualModal} />
+			</Modal>
+			<Modal
+				visible={showMapViewModal}
+				onDismiss={() => setShowMapViewModal(false)}
+				contentContainerStyle={mapStyle(theme).modalContainer}
+			>
+				<MapView />
+			</Modal>
 		</SafeAreaView>
 	);
 };

@@ -118,7 +118,7 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 						}
 					}}
 				>
-					{isEdit ? "Confirm Edit" : "Set Alarm"}
+					{isEdit ? "Confirm Edit" : "Create Alarm"}
 				</Button>
 			</View>
 		</View>

@@ -13,21 +13,27 @@ export const appStyle = (theme: MD3Theme = dark) =>
 			paddingVertical: 32,
 			backgroundColor: theme.colors.background,
 		},
+		appBar: {
+			marginVertical: 8,
+			paddingHorizontal: 16,
+		},
 		container: {
 			flex: 1,
 			backgroundColor: theme.colors.background,
 			alignItems: "center",
 			justifyContent: "center",
-			padding: 16,
 		},
 		logo: {
 			width: 24,
 			margin: 16,
 			aspectRatio: 1,
 		},
+		titleText: {
+			fontWeight: "bold",
+		},
 		fab: {
 			position: "absolute",
-			bottom: "4%",
+			bottom: "-1%",
 		},
 		errorText: {
 			color: theme.colors.error,
@@ -153,18 +159,26 @@ export const alarmListStyle = (theme: MD3Theme = dark) =>
 export const alarmListItemStyle = (theme: MD3Theme = dark) =>
 	StyleSheet.create({
 		container: {
-			width: deviceWidth * 0.85,
-			marginVertical: 8,
-			marginHorizontal: 8,
+			width: deviceWidth * 0.88,
+			marginBottom: 24,
+			marginHorizontal: 16,
 			padding: 16,
 			borderRadius: theme.roundness,
 		},
+		titleText: {
+			fontWeight: "bold",
+			fontSize: 18,
+			color: theme.colors.secondary,
+		},
+		detailsContainer: {
+			marginVertical: 8,
+		},
 		locationContainer: {
 			flexDirection: "row",
+			marginBottom: 4,
 		},
 		divider: {
-			marginTop: 16,
-			marginBottom: 8,
+			marginVertical: 8,
 		},
 		buttonsContainer: {
 			flexDirection: "row",
