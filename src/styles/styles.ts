@@ -8,12 +8,22 @@ const deviceHeight = Dimensions.get("window").height;
 
 export const appStyle = (theme: MD3Theme = dark) =>
 	StyleSheet.create({
+		app: {
+			flex: 1,
+			paddingVertical: 32,
+			backgroundColor: theme.colors.background,
+		},
 		container: {
 			flex: 1,
 			backgroundColor: theme.colors.background,
 			alignItems: "center",
 			justifyContent: "center",
 			padding: 16,
+		},
+		logo: {
+			width: 24,
+			margin: 16,
+			aspectRatio: 1,
 		},
 		fab: {
 			position: "absolute",
