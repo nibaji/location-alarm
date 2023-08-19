@@ -77,7 +77,7 @@ const PaperApp = () => {
 		setTheme,
 		currentLocation,
 		setCurrentLocation,
-		alarms: alarms,
+		alarms,
 		setAlarms,
 		saveAlarmsToAsync,
 		deleteAlarm,
@@ -93,8 +93,8 @@ const PaperApp = () => {
 	};
 
 	useEffect(() => {
-		saveAlarmsToAsync();
-		saveThemeToAsync();
+		if (alarms) saveAlarmsToAsync();
+		if (theme) saveThemeToAsync();
 	}, [JSON.stringify(alarms), JSON.stringify(theme)]);
 
 	useEffect(() => {
@@ -104,7 +104,7 @@ const PaperApp = () => {
 
 	return (
 		<AppContext.Provider value={value}>
-			<PaperProvider theme={value?.theme || dark}>
+			<PaperProvider theme={value?.theme ?? dark}>
 				<App />
 			</PaperProvider>
 		</AppContext.Provider>
