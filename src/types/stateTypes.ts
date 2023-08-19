@@ -23,7 +23,7 @@ export type AppStateType = {
 	setTheme: Function;
 	currentLocation: LocationObject | null;
 	setCurrentLocation: Function;
-	alarms: AlarmsType;
+	alarms: AlarmsType | undefined;
 	setAlarms: Function;
 	saveAlarmsToAsync: Function;
 	deleteAlarm: Function;

@@ -12,7 +12,7 @@ const AlarmsList = () => {
 
 	return (
 		<FlatList
-			data={Object.values(alarms)}
+			data={Object.values(alarms || {})}
 			renderItem={({ item }) => <AlarmListItem alarm={item} />}
 			keyExtractor={(item) => item.id}
 			showsVerticalScrollIndicator={false}

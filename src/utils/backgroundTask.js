@@ -78,7 +78,7 @@ export const triggerGPSPolling = async (alarms, setAlarms, theme) => {
 			setAlarms,
 		},
 	});
-	Object.values(alarms).forEach(async (alarm) => {
+	Object.values(alarms || {}).forEach(async (alarm) => {
 		if (alarm.active) {
 			console.log("starting", { alarm });
 			await BackgroundService.start(triggerAlarm, options(alarm));

@@ -12,12 +12,12 @@ import { AlarmItemType, AlarmsType } from "./src/types/stateTypes";
 import { dark } from "./src/styles/paperTheme";
 
 const PaperApp = () => {
-	const [theme, setTheme] = useState<MD3Theme | undefined>();
+	const [theme, setTheme] = useState<MD3Theme>();
 	const [currentLocation, setCurrentLocation] = useState<LocationObject | null>(
 		null
 	);
-	const [alarms, setAlarms] = useState<AlarmsType>({});
-	const [currentAlarm, setCurrentAlarm] = useState<AlarmItemType | undefined>();
+	const [alarms, setAlarms] = useState<AlarmsType>();
+	const [currentAlarm, setCurrentAlarm] = useState<AlarmItemType>();
 
 	const [showMapViewModal, setShowMapViewModal] = useState(false);
 	const [showManualLocationInputModal, setShowManualLocationInputModal] =
@@ -56,7 +56,7 @@ const PaperApp = () => {
 
 	const saveAlarmsToAsync = async () => {
 		try {
-			await AsyncStorage.setItem("alarms", JSON.stringify(alarms));
+			await AsyncStorage.setItem("alarmsMap", JSON.stringify(alarms));
 		} catch (e) {
 			console.log(e, "Alarms Set Async");
 		}
@@ -64,8 +64,7 @@ const PaperApp = () => {
 
 	const hydrateAlarmsFromAsync = async () => {
 		try {
-			const theAlarms = await AsyncStorage.getItem("alarms");
-			console.log({ theAlarms, alarms: theAlarms && JSON.parse(theAlarms) });
+			const theAlarms = await AsyncStorage.getItem("alarmsMap");
 			if (theAlarms) setAlarms(JSON.parse(theAlarms));
 		} catch (e) {
 			console.log(e, "Alarms Get Async");
@@ -78,7 +77,7 @@ const PaperApp = () => {
 		setTheme,
 		currentLocation,
 		setCurrentLocation,
-		alarms,
+		alarms: alarms,
 		setAlarms,
 		saveAlarmsToAsync,
 		deleteAlarm,
@@ -96,7 +95,7 @@ const PaperApp = () => {
 	useEffect(() => {
 		saveAlarmsToAsync();
 		saveThemeToAsync();
-	}, [JSON.stringify(alarms), theme]);
+	}, [JSON.stringify(alarms), JSON.stringify(theme)]);
 
 	useEffect(() => {
 		hydrateAlarmsFromAsync();
