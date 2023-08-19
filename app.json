@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "location-alarm",
-    "slug": "location-alarm",
+    "name": "Geo Alarm",
+    "slug": "Geo Alarm",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
     ]
   },
-  "name": "location-alarm"
+  "name": "Geo Alarm"
 }

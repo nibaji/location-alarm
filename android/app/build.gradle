@@ -81,9 +81,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.locationalarm"
+    namespace "xyz.nibaji.geoalarm"
     defaultConfig {
-        applicationId "com.locationalarm"
+        applicationId "xyz.nibaji.geoalarm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
