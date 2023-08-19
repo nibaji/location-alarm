@@ -38,7 +38,7 @@ const triggerAlarm = async (params) => {
 			if (distance <= radius) {
 				console.log("destination reached", { distance, alarm });
 
-				for (let i = 0; i < 80; i++) {
+				for (let i = 0; i < 8000; i++) {
 					Vibration.vibrate();
 				}
 
@@ -53,7 +53,6 @@ const triggerAlarm = async (params) => {
 					},
 				});
 				this.active = false;
-				// BackgroundService.stop().then(() => console.log("stopped"));
 			}
 			await sleep(delay);
 		} while (BackgroundService.isRunning() && this.active);
@@ -87,4 +86,17 @@ export const triggerGPSPolling = async (alarms, setAlarms, theme) => {
 			}); // Only Android, iOS will ignore this call
 		}
 	});
+
+	let killBgService;
+	for (const alarm in alarms) {
+		if (!alarms[alarm].active) {
+			killBgService = true;
+		} else {
+			return;
+		}
+	}
+
+	if (killBgService) {
+		BackgroundService.stop().then(() => console.log("stopped"));
+	}
 };
