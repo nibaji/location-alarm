@@ -16,9 +16,9 @@ const sleep = (time) =>
 // or there is a foreground app).
 const triggerAlarm = async (params) => {
 	const { delay, alarm, editAlarm } = params;
+	const startDate = new Date();
+	let triggered = false;
 	await new Promise(async () => {
-		const startDate = new Date();
-		this.active = true;
 		do {
 			const {
 				radius,
@@ -35,11 +35,13 @@ const triggerAlarm = async (params) => {
 			);
 
 			if (distance <= radius) {
-				Vibration.vibrate([1000, 500, 2000, 500, 3000], true);
-
-				await BackgroundService.updateNotification({
-					taskDesc: `Reached ${alarm.title}`,
-				});
+				if (!triggered) {
+					Vibration.vibrate([0, 10, 20, 30, 40, 50], true);
+					await BackgroundService.updateNotification({
+						taskDesc: `Reached ${alarm.title}`,
+					});
+					triggered = true;
+				}
 				// kill alarm and set vibration off only after 1 min.
 				const currentDate = new Date();
 				const passedSeconds =
@@ -50,11 +52,10 @@ const triggerAlarm = async (params) => {
 						active: false,
 					});
 					Vibration.cancel();
-					this.active = false;
 				}
 			}
 			await sleep(delay);
-		} while (BackgroundService.isRunning() && this.active);
+		} while (BackgroundService.isRunning());
 	});
 };
 
@@ -62,12 +63,12 @@ export const triggerGPSPolling = async (alarms, editAlarm, theme) => {
 	const options = (alarm) => ({
 		taskName: "Geo Alarm",
 		taskTitle: "Geo Alarm",
-		taskDesc: alarm.title,
+		taskDesc: `${alarm.title} is on`,
 		taskIcon: {
 			name: "ic_launcher",
 			type: "mipmap",
 		},
-		color: theme.colors.primaryContainer,
+		color: theme?.colors.primaryContainer ?? "cyan",
 		linkingURI: `geoAlarm://alarm?id=${alarm.id}`,
 		parameters: {
 			delay: 5000,

@@ -58,14 +58,5 @@ export const getDistanceBetween2LatsLongsInMeters = (
 	return distance;
 };
 
-export const shouldKillBgServices = (alarms: AlarmsType | undefined) => {
-	let killBgService = false;
-	Object.values(alarms || {}).forEach((alarm) => {
-		if (!alarm.active) {
-			killBgService = true;
-		} else {
-			return;
-		}
-	});
-	return killBgService;
-};
+export const shouldKillBgServices = (alarms: AlarmsType | undefined) =>
+	!Object.values(alarms ?? {}).find((alarm) => alarm.active); // if something is active don not kill bg service
