@@ -1,6 +1,8 @@
 import { Vibration } from "react-native";
 import BackgroundService from "react-native-background-actions";
 
+import { alarm1 } from "../data/sound";
+
 import { LocationFormDataType } from "../types/dataTypes";
 import { AlarmItemType, AlarmsType } from "../types/stateTypes";
 
@@ -68,6 +70,7 @@ export const triggerVibrationAndSound = async (
 	editAlarm: Function,
 	alarm: AlarmItemType
 ) => {
+	alarm1.play();
 	Vibration.vibrate([0, 100, 200, 300, 400, 500, 6], true);
 	await BackgroundService.updateNotification({
 		taskDesc: `Reached ${alarm.title}`,
@@ -75,10 +78,11 @@ export const triggerVibrationAndSound = async (
 
 	// kill alarm and set vibration off only after 1 min.
 	setTimeout(() => {
+		alarm1.stopAlarm();
+		Vibration.cancel();
 		editAlarm([alarm.id], {
 			...alarm,
 			active: false,
 		});
-		Vibration.cancel();
 	}, 60000);
 };

@@ -5,10 +5,12 @@ import BackgroundService from "react-native-background-actions";
 
 import { AppContext } from "../context/appContext";
 
+import { alarm1 } from "../data/sound";
+import { shouldKillBgServices } from "../utils/utils";
+
 import { AlarmListItemType } from "../types/propTypes";
 
 import { alarmListItemStyle } from "../styles/styles";
-import { shouldKillBgServices } from "../utils/utils";
 
 const AlarmListItem: React.FC<AlarmListItemType> = ({ alarm }) => {
 	const {
@@ -28,6 +30,7 @@ const AlarmListItem: React.FC<AlarmListItemType> = ({ alarm }) => {
 	const handleAlarmToggle = async (value: boolean) => {
 		editAlarm(alarm.id, { ...alarm, active: value });
 		if (!value) {
+			alarm1.stopAlarm();
 			Vibration.cancel();
 			if (shouldKillBgServices(alarms)) {
 				await BackgroundService.stop();
