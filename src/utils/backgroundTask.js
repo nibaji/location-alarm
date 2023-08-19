@@ -5,6 +5,7 @@ import * as Location from "expo-location";
 import {
 	getDistanceBetween2LatsLongsInMeters,
 	shouldKillBgServices,
+	triggerVibrationAndSound,
 } from "./utils";
 
 const sleep = (time) =>
@@ -16,8 +17,7 @@ const sleep = (time) =>
 // or there is a foreground app).
 const triggerAlarm = async (params) => {
 	const { delay, alarm, editAlarm } = params;
-	const startDate = new Date();
-	let triggered = false;
+	let isTriggered;
 	await new Promise(async () => {
 		do {
 			const {
@@ -35,27 +35,11 @@ const triggerAlarm = async (params) => {
 			);
 
 			if (distance <= radius) {
-				if (!triggered) {
-					Vibration.vibrate([0, 10, 20, 30, 40, 50], true);
-					await BackgroundService.updateNotification({
-						taskDesc: `Reached ${alarm.title}`,
-					});
-					triggered = true;
-				}
-				// kill alarm and set vibration off only after 1 min.
-				const currentDate = new Date();
-				const passedSeconds =
-					(currentDate.getTime() - startDate.getTime()) / 1000;
-				if (passedSeconds >= 60) {
-					editAlarm([alarm.id], {
-						...alarm,
-						active: false,
-					});
-					Vibration.cancel();
-				}
+				await triggerVibrationAndSound(editAlarm, alarm);
+				isTriggered = true;
 			}
 			await sleep(delay);
-		} while (BackgroundService.isRunning());
+		} while ((BackgroundService.isRunning(), !isTriggered));
 	});
 };
 

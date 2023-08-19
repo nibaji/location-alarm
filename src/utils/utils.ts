@@ -1,3 +1,6 @@
+import { Vibration } from "react-native";
+import BackgroundService from "react-native-background-actions";
+
 import { LocationFormDataType } from "../types/dataTypes";
 import { AlarmItemType, AlarmsType } from "../types/stateTypes";
 
@@ -60,3 +63,22 @@ export const getDistanceBetween2LatsLongsInMeters = (
 
 export const shouldKillBgServices = (alarms: AlarmsType | undefined) =>
 	!Object.values(alarms ?? {}).find((alarm) => alarm.active); // if something is active don not kill bg service
+
+export const triggerVibrationAndSound = async (
+	editAlarm: Function,
+	alarm: AlarmItemType
+) => {
+	Vibration.vibrate([0, 100, 200, 300, 400, 500, 6], true);
+	await BackgroundService.updateNotification({
+		taskDesc: `Reached ${alarm.title}`,
+	});
+
+	// kill alarm and set vibration off only after 1 min.
+	setTimeout(() => {
+		editAlarm([alarm.id], {
+			...alarm,
+			active: false,
+		});
+		Vibration.cancel();
+	}, 60000);
+};
