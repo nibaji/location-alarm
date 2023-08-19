@@ -2,7 +2,10 @@ import { Vibration } from "react-native";
 import BackgroundService from "react-native-background-actions";
 import * as Location from "expo-location";
 
-import { getDistanceBetween2LatsLongsInMeters } from "./utils";
+import {
+	getDistanceBetween2LatsLongsInMeters,
+	shouldKillBgServices,
+} from "./utils";
 
 const sleep = (time) =>
 	new Promise((resolve) => setTimeout(() => resolve(), time));
@@ -12,8 +15,9 @@ const sleep = (time) =>
 // React Native will go into "paused" mode (unless there are other tasks running,
 // or there is a foreground app).
 const triggerAlarm = async (params) => {
-	const { delay, alarm, alarms, setAlarms } = params;
+	const { delay, alarm, editAlarm } = params;
 	await new Promise(async () => {
+		const startDate = new Date();
 		this.active = true;
 		do {
 			const {
@@ -29,37 +33,32 @@ const triggerAlarm = async (params) => {
 				latitude,
 				longitude
 			);
-			console.log("service is running", {
-				distance,
-				alarm,
-				time: new Date(),
-			});
 
 			if (distance <= radius) {
-				console.log("destination reached", { distance, alarm });
-
-				for (let i = 0; i < 8000; i++) {
-					Vibration.vibrate();
-				}
+				Vibration.vibrate([1000, 500, 2000, 500, 3000], true);
 
 				await BackgroundService.updateNotification({
 					taskDesc: `Reached ${alarm.title}`,
 				});
-				setAlarms({
-					...alarms,
-					[alarm.id]: {
+				// kill alarm and set vibration off only after 1 min.
+				const currentDate = new Date();
+				const passedSeconds =
+					(currentDate.getTime() - startDate.getTime()) / 1000;
+				if (passedSeconds >= 60) {
+					editAlarm([alarm.id], {
 						...alarm,
 						active: false,
-					},
-				});
-				this.active = false;
+					});
+					Vibration.cancel();
+					this.active = false;
+				}
 			}
 			await sleep(delay);
 		} while (BackgroundService.isRunning() && this.active);
 	});
 };
 
-export const triggerGPSPolling = async (alarms, setAlarms, theme) => {
+export const triggerGPSPolling = async (alarms, editAlarm, theme) => {
 	const options = (alarm) => ({
 		taskName: "Geo Alarm",
 		taskTitle: "Geo Alarm",
@@ -73,13 +72,11 @@ export const triggerGPSPolling = async (alarms, setAlarms, theme) => {
 		parameters: {
 			delay: 5000,
 			alarm,
-			alarms,
-			setAlarms,
+			editAlarm,
 		},
 	});
 	Object.values(alarms || {}).forEach(async (alarm) => {
 		if (alarm.active) {
-			console.log("starting", { alarm });
 			await BackgroundService.start(triggerAlarm, options(alarm));
 			await BackgroundService.updateNotification({
 				taskDesc: alarm.title,
@@ -87,16 +84,7 @@ export const triggerGPSPolling = async (alarms, setAlarms, theme) => {
 		}
 	});
 
-	let killBgService;
-	for (const alarm in alarms) {
-		if (!alarms[alarm].active) {
-			killBgService = true;
-		} else {
-			return;
-		}
-	}
-
-	if (killBgService) {
-		BackgroundService.stop().then(() => console.log("stopped"));
+	if (shouldKillBgServices(alarms)) {
+		await BackgroundService.stop();
 	}
 };

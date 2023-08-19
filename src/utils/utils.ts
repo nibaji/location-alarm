@@ -1,5 +1,5 @@
 import { LocationFormDataType } from "../types/dataTypes";
-import { AlarmItemType } from "../types/stateTypes";
+import { AlarmItemType, AlarmsType } from "../types/stateTypes";
 
 export const generateAlarmIdFromForm = (
 	alarmFormData: LocationFormDataType
@@ -56,4 +56,16 @@ export const getDistanceBetween2LatsLongsInMeters = (
 
 	const distance = earthRadius * angularDistance; // Distance in meters
 	return distance;
+};
+
+export const shouldKillBgServices = (alarms: AlarmsType | undefined) => {
+	let killBgService = false;
+	Object.values(alarms || {}).forEach((alarm) => {
+		if (!alarm.active) {
+			killBgService = true;
+		} else {
+			return;
+		}
+	});
+	return killBgService;
 };

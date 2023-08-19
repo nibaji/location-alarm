@@ -1,16 +1,19 @@
 import React, { useContext } from "react";
-import { View } from "react-native";
+import { View, Vibration } from "react-native";
 import { Surface, Text, Button, Divider, Switch } from "react-native-paper";
+import BackgroundService from "react-native-background-actions";
 
 import { AppContext } from "../context/appContext";
 
 import { AlarmListItemType } from "../types/propTypes";
 
 import { alarmListItemStyle } from "../styles/styles";
+import { shouldKillBgServices } from "../utils/utils";
 
 const AlarmListItem: React.FC<AlarmListItemType> = ({ alarm }) => {
 	const {
 		theme,
+		alarms,
 		editAlarm,
 		deleteAlarm,
 		setCurrentAlarm,
@@ -20,6 +23,16 @@ const AlarmListItem: React.FC<AlarmListItemType> = ({ alarm }) => {
 	const handleEdit = () => {
 		setCurrentAlarm(alarm);
 		setShowManualLocationInputModal(true);
+	};
+
+	const handleAlarmToggle = async (value: boolean) => {
+		editAlarm(alarm.id, { ...alarm, active: value });
+		if (!value) {
+			Vibration.cancel();
+			if (shouldKillBgServices(alarms)) {
+				await BackgroundService.stop();
+			}
+		}
 	};
 
 	return (
@@ -51,12 +64,7 @@ const AlarmListItem: React.FC<AlarmListItemType> = ({ alarm }) => {
 				<Button icon="circle-edit-outline" onPress={handleEdit}>
 					Edit
 				</Button>
-				<Switch
-					value={alarm.active}
-					onValueChange={(value) =>
-						editAlarm(alarm.id, { ...alarm, active: value })
-					}
-				/>
+				<Switch value={alarm.active} onValueChange={handleAlarmToggle} />
 			</View>
 		</Surface>
 	);

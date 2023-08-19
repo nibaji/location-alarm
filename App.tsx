@@ -29,7 +29,7 @@ export const App: React.FC = () => {
 		theme,
 		setTheme,
 		alarms,
-		setAlarms,
+		editAlarm,
 		setCurrentAlarm,
 		showMapViewModal,
 		setShowMapViewModal,
@@ -79,7 +79,7 @@ export const App: React.FC = () => {
 	};
 
 	useEffect(() => {
-		triggerGPSPolling(alarms, setAlarms, theme);
+		triggerGPSPolling(alarms, editAlarm, theme);
 	}, [JSON.stringify(alarms)]);
 
 	useEffect(() => {
