@@ -27,7 +27,7 @@ const PaperApp = () => {
 
 	const deleteAlarm = (id: string) => {
 		const newAlarmsMap = { ...alarms };
-		delete alarms?.[id];
+		delete newAlarmsMap?.[id];
 		setAlarms(newAlarmsMap);
 	};
 
