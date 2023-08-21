@@ -143,7 +143,11 @@ export const App: React.FC = () => {
 
 	return (
 		<SafeAreaView style={appStyle(theme).app}>
-			<StatusBar />
+			<StatusBar
+				style={
+					JSON.stringify(theme) === JSON.stringify(dark) ? "light" : "dark"
+				}
+			/>
 			<Appbar style={appStyle(theme).appBar}>
 				<Appbar.Content
 					title="Geo Alarm"
