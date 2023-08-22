@@ -4,7 +4,7 @@ export type MapViewPropsType = {};
 
 export type createEditAlarmPropsType = {
 	closeModal: Function;
-	isEdit?: Boolean;
+	isEdit?: boolean;
 	currentAlarm?: AlarmItemType;
 };
 
