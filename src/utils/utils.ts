@@ -1,4 +1,5 @@
 import { Vibration } from "react-native";
+import BackgroundTimer from "react-native-background-timer";
 
 import { alarm1 } from "../data/sound";
 
@@ -71,10 +72,9 @@ export const triggerVibrationAndSound = async (
 ) => {
 	alarm1.play();
 	Vibration.vibrate([0, 100, 200, 300, 400, 500, 6], true);
-	// todo: push notification
 
 	// kill alarm and set vibration off only after 1 min.
-	setTimeout(() => {
+	BackgroundTimer.setTimeout(() => {
 		alarm1.stopAlarm();
 		Vibration.cancel();
 		editAlarm([alarm.id], {
