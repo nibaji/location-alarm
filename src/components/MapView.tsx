@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
 import { View } from "react-native";
-import { Button, Text, Surface, Card } from "react-native-paper";
+import { Button, Text, Card } from "react-native-paper";
 import WebView, { WebViewNavigation } from "react-native-webview";
 import Entypo from "react-native-vector-icons/Entypo";
 
@@ -80,24 +80,7 @@ const MapView: React.FC<MapViewPropsType> = () => {
 
 	return (
 		<View style={mapStyle(theme).container}>
-			<WebView
-				style={mapStyle(theme).webView}
-				ref={webRef}
-				source={{
-					uri: `https://www.openstreetmap.org/query?lat=${currentLocation?.coords.latitude}&lon=${currentLocation?.coords.longitude}`,
-				}}
-				scrollEnabled
-				onLoad={handleOnLoad}
-				geolocationEnabled
-				androidLayerType="hardware"
-				originWhitelist={["https://www.openstreetmap.org/query?"]}
-				onNavigationStateChange={handleNavigationStateChange}
-			/>
-			<Surface
-				style={mapStyle(theme).detailsContainer}
-				mode="elevated"
-				elevation={4}
-			>
+			<View style={mapStyle(theme).detailsContainer}>
 				<Text style={mapStyle(theme).hintText}>
 					<Entypo name="info-with-circle" /> Tap on the desired location to get
 					the latitude and longitude.
@@ -124,29 +107,42 @@ const MapView: React.FC<MapViewPropsType> = () => {
 						</Text>
 					</View>
 				</Card>
+			</View>
+			<WebView
+				style={mapStyle(theme).webView}
+				ref={webRef}
+				source={{
+					uri: `https://www.openstreetmap.org/query?lat=${currentLocation?.coords.latitude}&lon=${currentLocation?.coords.longitude}`,
+				}}
+				scrollEnabled
+				onLoad={handleOnLoad}
+				geolocationEnabled
+				androidLayerType="hardware"
+				originWhitelist={["https://www.openstreetmap.org/query?"]}
+				onNavigationStateChange={handleNavigationStateChange}
+			/>
+			<View style={mapStyle(theme).buttonsContainer}>
+				<Button
+					buttonColor={theme?.colors.errorContainer}
+					textColor={theme?.colors.error}
+					mode="elevated"
+					onPress={() => setShowMapViewModal(false)}
+				>
+					Cancel
+				</Button>
 
-				<View style={mapStyle(theme).buttonsContainer}>
-					<Button
-						buttonColor={theme?.colors.errorContainer}
-						textColor={theme?.colors.error}
-						mode="elevated"
-						onPress={() => setShowMapViewModal(false)}
-					>
-						Cancel
-					</Button>
-
-					<Button
-						icon="google-maps"
-						buttonColor={theme?.colors.primaryContainer}
-						textColor={theme?.colors.secondary}
-						labelStyle={mapStyle(theme).buttonLabel}
-						mode="elevated"
-						onPress={handleSettingTargetCoordinates}
-					>
-						Confirm location
-					</Button>
-				</View>
-			</Surface>
+				<Button
+					icon="google-maps"
+					buttonColor={theme?.colors.primaryContainer}
+					textColor={theme?.colors.secondary}
+					labelStyle={mapStyle(theme).buttonLabel}
+					mode="elevated"
+					disabled={!coordinates?.latitude && !coordinates?.longitude}
+					onPress={handleSettingTargetCoordinates}
+				>
+					Confirm Coordinates
+				</Button>
+			</View>
 		</View>
 	);
 };

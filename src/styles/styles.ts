@@ -44,32 +44,37 @@ export const appStyle = (theme: MD3Theme = dark) =>
 export const mapStyle = (theme: MD3Theme = dark) =>
 	StyleSheet.create({
 		modalContainer: {
-			height: deviceHeight,
-			alignItems: "center",
 			justifyContent: "center",
+			alignItems: "center",
 		},
 		container: {
-			flex: 1,
+			height: deviceHeight * 0.96,
+			width: deviceWidth * 0.96,
 			backgroundColor: theme.colors.background,
 			alignItems: "center",
 			justifyContent: "center",
+			padding: 8,
+			borderRadius: theme.roundness,
 		},
 		webView: {
 			flex: 1,
-			width: deviceWidth,
+			width: deviceWidth * 0.92,
 		},
 		detailsContainer: {
-			flex: 0.24,
-			backgroundColor: theme.colors.secondary,
+			flex: 0.16,
+			backgroundColor: theme.colors.background,
 			justifyContent: "center",
 			alignItems: "center",
-			width: deviceWidth,
+			width: "100%",
 			padding: 8,
 		},
 		buttonsContainer: {
+			backgroundColor: theme.colors.background,
 			flexDirection: "row",
 			justifyContent: "space-around",
 			width: "100%",
+			paddingTop: 16,
+			paddingBottom: 8,
 		},
 		buttonLabel: {
 			padding: 2,
@@ -77,10 +82,9 @@ export const mapStyle = (theme: MD3Theme = dark) =>
 			textTransform: "uppercase",
 		},
 		hintText: {
-			color: theme.colors.primaryContainer,
+			color: theme.colors.primary,
 			fontSize: 12,
-			margin: 2,
-			padding: 2,
+			marginHorizontal: 2,
 			textAlign: "justify",
 		},
 		coordinatesContainer: {
@@ -88,7 +92,7 @@ export const mapStyle = (theme: MD3Theme = dark) =>
 			paddingHorizontal: 16,
 			paddingVertical: 8,
 			marginVertical: 8,
-			minWidth: "80%",
+			minWidth: "88%",
 		},
 		coordinateItemContainer: {
 			flexDirection: "row",
