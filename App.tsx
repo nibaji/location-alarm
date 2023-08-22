@@ -118,7 +118,7 @@ export const App: React.FC = () => {
 				regions.push({
 					latitude: alarm.location?.latitude ?? 0,
 					longitude: alarm.location?.longitude ?? 0,
-					radius: alarm.radius,
+					radius: alarm.radius || 0.01,
 					identifier: JSON.stringify({
 						id: alarm.id,
 						title: alarm.title,
@@ -129,11 +129,14 @@ export const App: React.FC = () => {
 			}
 		});
 
-		if (regions.length) {
-			currentRegions = [...regions];
-			Location.startGeofencingAsync(GEO_FENCING_TASK_NAME, regions);
-		} else {
-			Location.stopGeofencingAsync(GEO_FENCING_TASK_NAME);
+		if (TaskManager.isTaskDefined(GEO_FENCING_TASK_NAME)) {
+			if (regions.length) {
+				currentRegions = [...regions];
+				Location.startGeofencingAsync(GEO_FENCING_TASK_NAME, regions);
+			} else {
+				TaskManager.unregisterAllTasksAsync();
+				// Location.stopGeofencingAsync(GEO_FENCING_TASK_NAME);
+			}
 		}
 	}, [JSON.stringify(alarms)]);
 
