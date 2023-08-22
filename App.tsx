@@ -7,7 +7,7 @@ import * as TaskManager from "expo-task-manager";
 import * as Notifications from "expo-notifications";
 
 import MapView from "./src/components/MapView";
-import LocationInput from "./src/components/LocationInput";
+import CreateEditAlarm from "./src/components/CreateEditAlarm";
 import AlarmsList from "./src/components/AlarmsList";
 
 import { AppContext } from "./src/context/appContext";
@@ -41,8 +41,8 @@ export const App: React.FC = () => {
 		setCurrentAlarm,
 		showMapViewModal,
 		setShowMapViewModal,
-		showManualLocationInputModal,
-		setShowManualLocationInputModal,
+		showCreateEditAlarm,
+		setShowCreateEditAlarm,
 	} = useContext(AppContext);
 
 	const getUserLocation = async () => {
@@ -108,7 +108,7 @@ export const App: React.FC = () => {
 		if (!preserveCurrentAlarm) {
 			setCurrentAlarm(undefined);
 		}
-		setShowManualLocationInputModal(false);
+		setShowCreateEditAlarm(false);
 	};
 
 	useEffect(() => {
@@ -180,19 +180,20 @@ export const App: React.FC = () => {
 						<FAB
 							icon="plus"
 							style={appStyle(theme).fab}
-							onPress={() =>
-								setShowManualLocationInputModal(!showManualLocationInputModal)
-							}
+							onPress={() => {
+								setCurrentAlarm(null);
+								setShowCreateEditAlarm(!showCreateEditAlarm);
+							}}
 						/>
 					</>
 				)}
 			</View>
 			<Modal
-				visible={showManualLocationInputModal}
+				visible={showCreateEditAlarm}
 				onDismiss={closeManualModal}
 				contentContainerStyle={locationInputStyle(theme).modalContainer}
 			>
-				<LocationInput closeModal={closeManualModal} />
+				<CreateEditAlarm closeModal={closeManualModal} />
 			</Modal>
 			<Modal
 				visible={showMapViewModal}

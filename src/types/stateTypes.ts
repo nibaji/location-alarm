@@ -32,8 +32,8 @@ export type AppStateType = {
 	setCurrentAlarm: Function;
 	showMapViewModal: boolean;
 	setShowMapViewModal: Function;
-	showManualLocationInputModal: boolean;
-	setShowManualLocationInputModal: Function;
+	showCreateEditAlarm: boolean;
+	setShowCreateEditAlarm: Function;
 	formDataDraft: LocationFormDataType | null;
 	setFormDataDraft: Function;
 };

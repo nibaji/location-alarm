@@ -18,8 +18,8 @@ export const initialAppState: AppStateType = {
 	setCurrentAlarm: () => {},
 	showMapViewModal: false,
 	setShowMapViewModal: () => {},
-	showManualLocationInputModal: false,
-	setShowManualLocationInputModal: () => {},
+	showCreateEditAlarm: false,
+	setShowCreateEditAlarm: () => {},
 	formDataDraft: null,
 	setFormDataDraft: () => {},
 };

@@ -7,8 +7,7 @@ import AlarmListItem from "./AlarmListItem";
 import { alarmListStyle } from "../styles/styles";
 
 const AlarmsList = () => {
-	const { alarms, setShowManualLocationInputModal, theme } =
-		useContext(AppContext);
+	const { alarms, setShowCreateEditAlarm, theme } = useContext(AppContext);
 
 	return (
 		<FlatList
@@ -19,7 +18,7 @@ const AlarmsList = () => {
 			ListEmptyComponent={
 				<View style={alarmListStyle(theme).emptyTextWrapper}>
 					<Text
-						onPress={() => setShowManualLocationInputModal(true)}
+						onPress={() => setShowCreateEditAlarm(true)}
 						style={alarmListStyle(theme).emptyText}
 					>
 						Alarms List is Empty! Add one?

@@ -16,7 +16,7 @@ const MapView: React.FC<MapViewPropsType> = () => {
 		theme,
 		currentLocation,
 		setShowMapViewModal,
-		setShowManualLocationInputModal,
+		setShowCreateEditAlarm,
 		formDataDraft,
 		setFormDataDraft,
 	} = useContext(AppContext);
@@ -68,7 +68,7 @@ const MapView: React.FC<MapViewPropsType> = () => {
 				longitude: coordinates.longitude,
 			});
 			setShowMapViewModal(false);
-			setShowManualLocationInputModal(true);
+			setShowCreateEditAlarm(true);
 		}
 	};
 

@@ -20,8 +20,7 @@ const PaperApp = () => {
 	const [currentAlarm, setCurrentAlarm] = useState<AlarmItemType>();
 
 	const [showMapViewModal, setShowMapViewModal] = useState(false);
-	const [showManualLocationInputModal, setShowManualLocationInputModal] =
-		useState(false);
+	const [showCreateEditAlarm, setShowCreateEditAlarm] = useState(false);
 
 	const [formDataDraft, setFormDataDraft] = useState(null);
 
@@ -86,8 +85,8 @@ const PaperApp = () => {
 		setCurrentAlarm,
 		showMapViewModal,
 		setShowMapViewModal,
-		showManualLocationInputModal,
-		setShowManualLocationInputModal,
+		showCreateEditAlarm,
+		setShowCreateEditAlarm,
 		formDataDraft,
 		setFormDataDraft,
 	};

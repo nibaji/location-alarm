@@ -8,23 +8,23 @@ import { AppContext } from "../context/appContext";
 import { alarm1 } from "../data/sound";
 import { shouldKillBgServices } from "../utils/utils";
 
-import { AlarmListItemType } from "../types/propTypes";
+import { AlarmListItemPropsType } from "../types/propTypes";
 
 import { alarmListItemStyle } from "../styles/styles";
 
-const AlarmListItem: React.FC<AlarmListItemType> = ({ alarm }) => {
+const AlarmListItem: React.FC<AlarmListItemPropsType> = ({ alarm }) => {
 	const {
 		theme,
 		alarms,
 		editAlarm,
 		deleteAlarm,
 		setCurrentAlarm,
-		setShowManualLocationInputModal,
+		setShowCreateEditAlarm,
 	} = useContext(AppContext);
 
 	const handleEdit = () => {
 		setCurrentAlarm(alarm);
-		setShowManualLocationInputModal(true);
+		setShowCreateEditAlarm(true);
 	};
 
 	const handleAlarmToggle = async (value: boolean) => {

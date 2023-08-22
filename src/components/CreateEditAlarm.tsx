@@ -8,12 +8,14 @@ import { locationFormFields } from "../data/formFields";
 
 import { generateAlarmItemFromFormData } from "../utils/utils";
 
-import { LocationInputType } from "../types/propTypes";
+import { createEditAlarmPropsType } from "../types/propTypes";
 import { LocationFormDataType } from "../types/dataTypes";
 
 import { locationInputStyle } from "../styles/styles";
 
-const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
+const CreateEditAlarm: React.FC<createEditAlarmPropsType> = ({
+	closeModal,
+}) => {
 	const {
 		theme,
 		alarms,
@@ -28,10 +30,10 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 	const isEdit = Boolean(currentAlarm);
 
 	const [formData, setFormData] = useState<LocationFormDataType>({
-		title: currentAlarm?.title || "",
-		latitude: currentAlarm?.location?.latitude.toString() || "",
-		longitude: currentAlarm?.location?.longitude.toString() || "",
-		radius: currentAlarm?.radius.toString() || "",
+		title: currentAlarm?.title ?? "",
+		latitude: currentAlarm?.location?.latitude.toString() ?? "",
+		longitude: currentAlarm?.location?.longitude.toString() ?? "",
+		radius: currentAlarm?.radius.toString() ?? "",
 	});
 
 	const onChangeText = (text: string, item: string) =>
@@ -107,6 +109,7 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 				<Button
 					mode="elevated"
 					onPress={() => {
+						setFormDataDraft(null);
 						if (isEdit && currentAlarm) {
 							editAlarm(
 								currentAlarm.id,
@@ -125,4 +128,4 @@ const LocationInput: React.FC<LocationInputType> = ({ closeModal }) => {
 	);
 };
 
-export default LocationInput;
+export default CreateEditAlarm;
