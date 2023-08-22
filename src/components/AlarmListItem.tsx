@@ -53,7 +53,11 @@ const AlarmListItem: React.FC<AlarmListItemType> = ({ alarm }) => {
 				</View>
 				<Text variant="titleSmall">
 					{alarm.radius
-						? `Triggers around ${alarm.radius}m radius.`
+						? `Triggers around ${
+								alarm.radius <= 1000
+									? alarm.radius + "m"
+									: alarm.radius / 1000 + "km"
+						  } radius.`
 						: "Triggers on reaching the exact location"}
 				</Text>
 			</View>

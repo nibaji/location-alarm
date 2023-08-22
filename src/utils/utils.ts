@@ -24,7 +24,7 @@ export const generateAlarmItemFromFormData = (
 			longitude: Number(longitude),
 		},
 		title,
-		radius: Number(radius || 0),
+		radius: parseInt(radius || "0"),
 	};
 };
 
