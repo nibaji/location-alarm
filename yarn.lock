@@ -5605,6 +5605,11 @@ react-native-background-timer@^2.4.1:
   resolved "https://registry.yarnpkg.com/react-native-background-timer/-/react-native-background-timer-2.4.1.tgz#a3bc1cafa8c1e3aeefd0611de120298b67978a0f"
   integrity sha512-TE4Kiy7jUyv+hugxDxitzu38sW1NqjCk4uE5IgU2WevLv7sZacaBc6PZKOShNRPGirLl1NWkaG3LDEkdb9Um5g==
 
+react-native-battery-optimization-check@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/react-native-battery-optimization-check/-/react-native-battery-optimization-check-1.0.8.tgz#1592e8662be02ac6dbff06e25523bf1835958a77"
+  integrity sha512-OXACVlMho/rmTg3YS2GQ0juGb7YKJTrvUnD7BMDNGpAUm6ykcgkU0i3vML76ZHRYTO1rB5Pdh4re+LeKSvVWsQ==
+
 react-native-paper@^5.10.1:
   version "5.10.1"
   resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-5.10.1.tgz#89d5bb51a9604518d470626cd56f6fc29b2164e1"

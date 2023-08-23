@@ -5,6 +5,10 @@ import { Modal, Appbar, Text, FAB } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import * as TaskManager from "expo-task-manager";
 import * as Notifications from "expo-notifications";
+import {
+	BatteryOptEnabled,
+	RequestDisableOptimization,
+} from "react-native-battery-optimization-check";
 
 import MapView from "./src/components/MapView";
 import CreateEditAlarm from "./src/components/CreateEditAlarm";
@@ -46,6 +50,16 @@ export const App: React.FC = () => {
 	} = useContext(AppContext);
 
 	const getUserLocation = async () => {
+		console.log("here");
+		const location = await Location.getCurrentPositionAsync({});
+		setCurrentLocation(location);
+	};
+
+	const disableDoze = async () => {
+		await RequestDisableOptimization();
+	};
+
+	const getLocationPermission = async () => {
 		const fgLocationPerm = await Location.requestForegroundPermissionsAsync();
 		if (fgLocationPerm.status === "granted") {
 			const { status } = await Location.requestBackgroundPermissionsAsync();
@@ -54,8 +68,7 @@ export const App: React.FC = () => {
 				return;
 			}
 
-			let location = await Location.getCurrentPositionAsync({});
-			setCurrentLocation(location);
+			await getUserLocation(); // get user location
 		} else {
 			setErrorMsg("Permission to access location was denied");
 			return;
@@ -80,7 +93,7 @@ export const App: React.FC = () => {
 				if (bgLocationPermission.status !== "granted") {
 					Alert.alert(
 						"Allow Background Location Access",
-						"App requires to access background location for the alarm to work",
+						"App requires to access background location for the alarm to work.",
 						[
 							{
 								text: "Cancel",
@@ -90,10 +103,29 @@ export const App: React.FC = () => {
 							},
 							{
 								text: "OK",
-								onPress: getUserLocation,
+								onPress: getLocationPermission,
 							},
 						]
 					);
+				}
+				const isDozeEnabled = await BatteryOptEnabled();
+				if (isDozeEnabled) {
+					Alert.alert(
+						"Allow App to run in the Background",
+						"App requires to run in the background for the alarm to be triggered.",
+						[
+							{
+								text: "Cancel",
+								onPress: () => setErrorMsg("doze is not disabled"),
+								style: "cancel",
+							},
+							{
+								text: "OK",
+								onPress: disableDoze,
+							},
+						]
+					);
+					disableDoze();
 				}
 			} else {
 				setErrorMsg("Notification Error");
@@ -135,7 +167,6 @@ export const App: React.FC = () => {
 				Location.startGeofencingAsync(GEO_FENCING_TASK_NAME, regions);
 			} else {
 				TaskManager.unregisterAllTasksAsync();
-				// Location.stopGeofencingAsync(GEO_FENCING_TASK_NAME);
 			}
 		}
 	}, [JSON.stringify(alarms)]);
@@ -171,8 +202,8 @@ export const App: React.FC = () => {
 			<View style={appStyle(theme).container}>
 				{errorMsg ? (
 					<Text style={appStyle(theme).errorText} onPress={getAllPermissions}>
-						Please Grant Background Location and Notification Permissions for
-						the app to work!
+						Please Grant Background Location and Notification Permissions,
+						disable battery optimization(doze) for the app!
 					</Text>
 				) : (
 					<>
