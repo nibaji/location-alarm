@@ -15,6 +15,7 @@ const AlarmsList = () => {
 			renderItem={({ item }) => <AlarmListItem alarm={item} />}
 			keyExtractor={(item) => item.id}
 			showsVerticalScrollIndicator={false}
+			contentContainerStyle={alarmListStyle(theme).container}
 			ListHeaderComponent={
 				<Banner
 					visible={true}

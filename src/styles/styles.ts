@@ -149,17 +149,20 @@ export const locationInputStyle = (theme: MD3Theme = dark) =>
 
 export const alarmListStyle = (theme: MD3Theme = dark) =>
 	StyleSheet.create({
+		container: {
+			width: deviceWidth * 0.96,
+		},
 		emptyTextWrapper: {
 			display: "flex",
 			flex: 1,
 			justifyContent: "center",
-			height: deviceHeight * 0.7,
+			alignItems: "center",
+			height: deviceHeight * 0.5,
 		},
 		emptyText: {
 			color: theme.colors.error,
 		},
 		banner: {
-			width: "100%",
 			marginBottom: 24,
 			marginTop: 8,
 			paddingTop: 4,
@@ -183,7 +186,6 @@ export const alarmListStyle = (theme: MD3Theme = dark) =>
 export const alarmListItemStyle = (theme: MD3Theme = dark) =>
 	StyleSheet.create({
 		container: {
-			width: deviceWidth * 0.88,
 			marginBottom: 16,
 			marginHorizontal: 16,
 			padding: 16,
