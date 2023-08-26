@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:location_alarm_flutter/utils/utils.dart';
+
+import 'package:location_alarm_flutter/widgets/alarm_form.dart';
+import 'package:location_alarm_flutter/widgets/alarm_list_item.dart';
 
 import 'package:location_alarm_flutter/consts.dart';
 import 'package:location_alarm_flutter/model/alarms_model.dart';
-import 'package:location_alarm_flutter/widgets/alarm_form.dart';
-import 'package:location_alarm_flutter/widgets/alarm_list_item.dart';
 
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
@@ -25,7 +29,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _showBottomSheet = false;
 
-  final Map<String, AlarmModel> _alarmsMap = {};
+  Map<String, AlarmModel> _alarmsMap = {};
 
   dynamic _currentAlarm;
   dynamic _formDraft;
@@ -40,12 +44,20 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _alarmsMap[id] = newAlarmData;
     });
+    saveAsyncData(
+      "alarms",
+      jsonEncode(_alarmsMap),
+    );
   }
 
   void _deleteAlarm(String id) {
     setState(() {
       _alarmsMap.removeWhere((String key, dynamic value) => key == id);
     });
+    saveAsyncData(
+      "alarms",
+      jsonEncode(_alarmsMap),
+    );
   }
 
   void _setCurrentAlarm(dynamic alarm) {
@@ -58,6 +70,23 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _formDraft = draft;
     });
+  }
+
+  @override
+  void initState() {
+    getAsyncData("alarms").then((value) {
+      setState(() {
+        Map<String, dynamic> jsonData = jsonDecode(value);
+        for (var element in jsonData.values) {
+          AlarmModel alarm;
+          alarm = AlarmModel.fromJson(element);
+          _alarmsMap[alarm.id] = alarm;
+        }
+      });
+    }).catchError((error) {
+      debugPrint(error.toString());
+    });
+    super.initState();
   }
 
   @override

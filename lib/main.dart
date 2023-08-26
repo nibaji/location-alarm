@@ -1,8 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:location_alarm_flutter/utils/utils.dart';
 
 import 'package:location_alarm_flutter/pages/home_page.dart';
-
-import 'package:location_alarm_flutter/consts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,6 +25,22 @@ class _MyApp extends State<MyApp> {
       _appTheme = theme;
       _isDarkTheme = _appTheme == Brightness.dark;
     });
+    saveAsyncData(
+      "isDarkTheme",
+      jsonEncode(_isDarkTheme),
+    );
+  }
+
+  @override
+  void initState() {
+    getAsyncData("isDarkTheme").then((value) {
+      setState(() {
+        _isDarkTheme = jsonDecode(value);
+      });
+    }).catchError((error) {
+      debugPrint(error.toString());
+    });
+    super.initState();
   }
 
   @override
