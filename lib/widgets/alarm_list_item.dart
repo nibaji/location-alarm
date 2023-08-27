@@ -1,3 +1,4 @@
+import 'package:alarmplayer/alarmplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:location_alarm_flutter/consts.dart';
 
@@ -104,14 +105,18 @@ class _AlarmListItemState extends State<AlarmListItem> {
                       Switch(
                         value: widget.alarm.active,
                         onChanged: (val) {
+                          Alarmplayer alarmPlayer = Alarmplayer();
                           AlarmModel newAlarm = widget.alarm;
                           newAlarm.active = val;
                           widget.createEditAlarm(widget.alarm.id, newAlarm);
                           widget.runService();
+                          if (!val) {
+                            alarmPlayer.StopAlarm();
+                          }
                         },
                       ),
                     ],
-                  )
+                  ),
                 ],
               )
             ],

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:alarmplayer/alarmplayer.dart';
 
 import 'package:location_alarm_flutter/widgets/alarm_form.dart';
 import 'package:location_alarm_flutter/widgets/alarm_list_item.dart';
@@ -28,6 +29,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Location location = Location();
+  Alarmplayer alarmplayer = Alarmplayer();
+
   bool _showBottomSheet = false;
 
   final Map<String, AlarmModel> _alarmsMap = {};
@@ -78,8 +82,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Location location = Location();
-
   Future<void> getLocation() async {
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
@@ -102,6 +104,13 @@ class _HomePageState extends State<HomePage> {
     _locationData = await location.getLocation();
   }
 
+  void triggerAlarm() {
+    Alarmplayer alarmplayer = Alarmplayer();
+    alarmplayer.Alarm(
+      url: "assets/sounds/clock-alarm-8761.mp3",
+    );
+  }
+
   bool shouldStartService() {
     activeAlarms = [];
     for (var e in _alarmsMap.values) {
@@ -120,13 +129,20 @@ class _HomePageState extends State<HomePage> {
       location.enableBackgroundMode(enable: true);
       location.onLocationChanged.listen(
         (LocationData currentLocation) {
-          debugPrint(currentLocation.toString());
           for (var element in activeAlarms) {
-            isLocationReached(
+            bool reached = isLocationReached(
               currentLocation,
               element.location,
               element.radius,
             );
+            if (reached) {
+              triggerAlarm();
+              activeAlarms = [
+                ...activeAlarms.where((e) => e.id != element.id),
+              ];
+              runService();
+              return;
+            }
           }
         },
       );
