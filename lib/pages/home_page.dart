@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
 
   late bool _serviceEnabled;
   late PermissionStatus _permissionGranted;
-  late LocationData _locationData;
+  LocationData? _locationData;
 
   void _changeBottomSheetVisibility() {
     setState(() {
@@ -223,10 +223,14 @@ class _HomePageState extends State<HomePage> {
               setCurrentAlarm: _setCurrentAlarm,
               setFormDraft: _setFormDraft,
               closeBottomSheet: _changeBottomSheetVisibility,
+              userLocation: _locationData,
             )
           : null,
       floatingActionButton: FloatingActionButton(
-        onPressed: _changeBottomSheetVisibility,
+        onPressed: () {
+          _setFormDraft(null);
+          _changeBottomSheetVisibility();
+        },
         tooltip: 'Add new Alarm',
         child:
             _showBottomSheet ? const Icon(Icons.close) : const Icon(Icons.add),
