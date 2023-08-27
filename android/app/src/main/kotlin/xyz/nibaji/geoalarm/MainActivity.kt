@@ -1,4 +1,4 @@
-package com.example.location_alarm_flutter
+package xyz.nibaji.geoalarm
 
 import io.flutter.embedding.android.FlutterActivity
 
