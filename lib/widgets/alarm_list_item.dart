@@ -14,6 +14,7 @@ class AlarmListItem extends StatefulWidget {
     required this.deleteAlarm,
     required this.setCurrentAlarm,
     required this.showBottomSheet,
+    required this.runService,
   });
 
   AlarmModel alarm;
@@ -21,6 +22,7 @@ class AlarmListItem extends StatefulWidget {
   void Function(String id) deleteAlarm;
   void Function(dynamic currentAlarm) setCurrentAlarm;
   void Function() showBottomSheet;
+  void Function() runService;
 
   @override
   State<AlarmListItem> createState() => _AlarmListItemState();
@@ -105,6 +107,7 @@ class _AlarmListItemState extends State<AlarmListItem> {
                           AlarmModel newAlarm = widget.alarm;
                           newAlarm.active = val;
                           widget.createEditAlarm(widget.alarm.id, newAlarm);
+                          widget.runService();
                         },
                       ),
                     ],

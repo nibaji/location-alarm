@@ -1,21 +1,3 @@
-class AlarmsListModel {
-  AlarmModel? id;
-
-  AlarmsListModel({this.id});
-
-  AlarmsListModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'] != null ? AlarmModel.fromJson(json['id']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (id != null) {
-      data['id'] = id!.toJson();
-    }
-    return data;
-  }
-}
-
 class AlarmModel {
   String title = "";
   LocationModel location = LocationModel(latitude: 0, longitude: 0);

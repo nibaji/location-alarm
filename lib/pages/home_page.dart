@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:location_alarm_flutter/utils/utils.dart';
+import 'package:location/location.dart';
 
 import 'package:location_alarm_flutter/widgets/alarm_form.dart';
 import 'package:location_alarm_flutter/widgets/alarm_list_item.dart';
 
-import 'package:location_alarm_flutter/consts.dart';
+import 'package:location_alarm_flutter/utils/utils.dart';
 import 'package:location_alarm_flutter/model/alarms_model.dart';
+import 'package:location_alarm_flutter/consts.dart';
 
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
@@ -29,10 +30,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _showBottomSheet = false;
 
-  Map<String, AlarmModel> _alarmsMap = {};
+  final Map<String, AlarmModel> _alarmsMap = {};
+  List<AlarmModel> activeAlarms = [];
 
   dynamic _currentAlarm;
   dynamic _formDraft;
+
+  late bool _serviceEnabled;
+  late PermissionStatus _permissionGranted;
+  late LocationData _locationData;
 
   void _changeBottomSheetVisibility() {
     setState(() {
@@ -72,6 +78,61 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Location location = Location();
+
+  Future<void> getLocation() async {
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    location.enableBackgroundMode(enable: true);
+
+    _locationData = await location.getLocation();
+  }
+
+  bool shouldStartService() {
+    activeAlarms = [];
+    for (var e in _alarmsMap.values) {
+      if (e.active) {
+        activeAlarms.add(e);
+      }
+    }
+    if (activeAlarms.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
+  void runService() {
+    if (shouldStartService()) {
+      location.enableBackgroundMode(enable: true);
+      location.onLocationChanged.listen(
+        (LocationData currentLocation) {
+          debugPrint(currentLocation.toString());
+          for (var element in activeAlarms) {
+            isLocationReached(
+              currentLocation,
+              element.location,
+              element.radius,
+            );
+          }
+        },
+      );
+    }
+  }
+
   @override
   void initState() {
     getAsyncData("alarms").then((value) {
@@ -86,6 +147,9 @@ class _HomePageState extends State<HomePage> {
     }).catchError((error) {
       debugPrint(error.toString());
     });
+    getLocation().then(
+      (value) => runService(),
+    );
     super.initState();
   }
 
@@ -112,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                 size: values["m"]?.toDouble(),
               ),
             ),
-          )
+          ),
         ],
       ),
       body: Builder(
@@ -128,6 +192,7 @@ class _HomePageState extends State<HomePage> {
                   deleteAlarm: _deleteAlarm,
                   setCurrentAlarm: _setCurrentAlarm,
                   showBottomSheet: _changeBottomSheetVisibility,
+                  runService: runService,
                 );
               },
             ),
