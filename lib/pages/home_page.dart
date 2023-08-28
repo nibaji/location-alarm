@@ -230,14 +230,25 @@ class _HomePageState extends State<HomePage> {
               userLocation: _locationData,
             )
           : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _setFormDraft(null);
           _changeBottomSheetVisibility();
         },
-        tooltip: 'Add new Alarm',
-        child:
-            _showBottomSheet ? const Icon(Icons.close) : const Icon(Icons.add),
+        tooltip: _showBottomSheet ? 'Add new Alarm' : 'Close',
+        mini: _showBottomSheet,
+        shape:
+            ShapeBorder.lerp(const StadiumBorder(), const StadiumBorder(), 0),
+        backgroundColor: _showBottomSheet
+            ? Theme.of(context).colorScheme.error
+            : Theme.of(context).colorScheme.primaryContainer,
+        child: _showBottomSheet
+            ? Icon(
+                Icons.close,
+                color: Theme.of(context).colorScheme.errorContainer,
+              )
+            : const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
