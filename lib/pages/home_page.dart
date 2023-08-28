@@ -10,6 +10,7 @@ import 'package:location_alarm_flutter/widgets/alarm_list_item.dart';
 import 'package:location_alarm_flutter/utils/utils.dart';
 import 'package:location_alarm_flutter/model/alarms_model.dart';
 import 'package:location_alarm_flutter/consts.dart';
+import 'package:location_alarm_flutter/widgets/banner_ad_widget.dart';
 
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
@@ -230,6 +231,7 @@ class _HomePageState extends State<HomePage> {
           );
         },
       ),
+      bottomNavigationBar: const BannerAdWidget(),
       bottomSheet: _showBottomSheet
           ? AlarmForm(
               createEditAlarm: _createEditAlarm,

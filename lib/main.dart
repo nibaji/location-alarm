@@ -1,11 +1,14 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:location_alarm_flutter/utils/utils.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'package:location_alarm_flutter/pages/home_page.dart';
 
+import 'package:location_alarm_flutter/utils/utils.dart';
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
+
   runApp(const MyApp());
 }
 
