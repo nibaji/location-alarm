@@ -199,19 +199,34 @@ class _HomePageState extends State<HomePage> {
         builder: (context) {
           List<AlarmModel> alarmsList = [..._alarmsMap.values.map((e) => e)];
           return Center(
-            child: ListView.builder(
-              itemCount: alarmsList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return AlarmListItem(
-                  alarm: alarmsList[index],
-                  createEditAlarm: _createEditAlarm,
-                  deleteAlarm: _deleteAlarm,
-                  setCurrentAlarm: _setCurrentAlarm,
-                  showBottomSheet: _changeBottomSheetVisibility,
-                  runService: runService,
-                );
-              },
-            ),
+            child: alarmsList.isNotEmpty
+                ? ListView.builder(
+                    itemCount: alarmsList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return AlarmListItem(
+                        alarm: alarmsList[index],
+                        createEditAlarm: _createEditAlarm,
+                        deleteAlarm: _deleteAlarm,
+                        setCurrentAlarm: _setCurrentAlarm,
+                        showBottomSheet: _changeBottomSheetVisibility,
+                        runService: runService,
+                      );
+                    },
+                  )
+                : TextButton(
+                    onPressed: _changeBottomSheetVisibility,
+                    style: ButtonStyle(
+                      overlayColor: MaterialStateProperty.all(
+                        Theme.of(context).colorScheme.errorContainer,
+                      ),
+                    ),
+                    child: Text(
+                      "Alarm List is Empty. Add one?",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                  ),
           );
         },
       ),
@@ -228,10 +243,7 @@ class _HomePageState extends State<HomePage> {
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _setFormDraft(null);
-          _changeBottomSheetVisibility();
-        },
+        onPressed: _changeBottomSheetVisibility,
         tooltip: _showBottomSheet ? 'Add new Alarm' : 'Close',
         mini: _showBottomSheet,
         shape:
