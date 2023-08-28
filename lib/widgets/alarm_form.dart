@@ -55,8 +55,7 @@ class _AlarmFormState extends State<AlarmForm> {
 
   void _setFormDraft(AlarmFormOutModel newFormDraft) {
     setState(() {
-      _formFieldsValue = newFormDraft;
-      _setFormFieldsValue();
+      widget.setFormDraft(newFormDraft);
     });
   }
 
@@ -70,6 +69,13 @@ class _AlarmFormState extends State<AlarmForm> {
       _setFormFieldsValue();
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget.setCurrentAlarm(null);
+    widget.setFormDraft(null);
+    super.dispose();
   }
 
   @override
@@ -176,7 +182,7 @@ class _AlarmFormState extends State<AlarmForm> {
                         builder: (BuildContext context) {
                           return CoordinatesPicker(
                             currentLocation: widget.userLocation,
-                            setFormDraft: widget.setFormDraft,
+                            setFormDraft: _setFormDraft,
                             currentFormDraft: _formFieldsValue!,
                           );
                         },

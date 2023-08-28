@@ -71,15 +71,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _setCurrentAlarm(dynamic alarm) {
-    setState(() {
-      _currentAlarm = alarm;
-    });
+    _currentAlarm = alarm;
   }
 
   void _setFormDraft(dynamic draft) {
-    setState(() {
-      _formDraft = draft;
-    });
+    _formDraft = draft;
   }
 
   Future<void> getLocation() async {

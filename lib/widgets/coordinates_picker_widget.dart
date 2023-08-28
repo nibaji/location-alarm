@@ -23,16 +23,21 @@ class CoordinatesPicker extends StatefulWidget {
 class _CoordinatesPickerState extends State<CoordinatesPicker> {
   @override
   Widget build(BuildContext context) {
+    double? draftLatitude = widget.currentFormDraft.latitude != ""
+        ? widget.currentFormDraft.latitude
+        : null;
+    double? draftLongitude = widget.currentFormDraft.longitude != ""
+        ? widget.currentFormDraft.longitude
+        : null;
+
     return FlutterLocationPicker(
-      initPosition: (widget.currentLocation?.latitude != null ||
-              widget.currentFormDraft.latitude != "")
-          ? LatLong(
-              widget.currentFormDraft.latitude ??
-                  widget.currentLocation?.latitude,
-              widget.currentFormDraft.longitude ??
-                  widget.currentLocation?.longitude,
-            )
-          : null,
+      initPosition:
+          (draftLatitude != null || widget.currentLocation?.latitude != null)
+              ? LatLong(
+                  draftLatitude ?? widget.currentLocation?.latitude ?? 0,
+                  draftLongitude ?? widget.currentLocation?.longitude ?? 0,
+                )
+              : null,
       selectLocationButtonStyle: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(
             Theme.of(context).colorScheme.primaryContainer),
