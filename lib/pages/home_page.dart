@@ -130,18 +130,20 @@ class _HomePageState extends State<HomePage> {
       location.onLocationChanged.listen(
         (LocationData currentLocation) {
           for (var element in activeAlarms) {
-            bool reached = isLocationReached(
-              currentLocation,
-              element.location,
-              element.radius,
-            );
-            if (reached) {
-              triggerAlarm();
-              activeAlarms = [
-                ...activeAlarms.where((e) => e.id != element.id),
-              ];
-              runService();
-              return;
+            if (element.location != null && element.radius != null) {
+              bool reached = isLocationReached(
+                currentLocation,
+                element.location!,
+                element.radius!,
+              );
+              if (reached) {
+                triggerAlarm();
+                activeAlarms = [
+                  ...activeAlarms.where((e) => e.id != element.id),
+                ];
+                runService();
+                return;
+              }
             }
           }
         },
@@ -157,7 +159,9 @@ class _HomePageState extends State<HomePage> {
         for (var element in jsonData.values) {
           AlarmModel alarm;
           alarm = AlarmModel.fromJson(element);
-          _alarmsMap[alarm.id] = alarm;
+          if (alarm.id != null) {
+            _alarmsMap[alarm.id!] = alarm;
+          }
         }
       });
     }).catchError((error) {

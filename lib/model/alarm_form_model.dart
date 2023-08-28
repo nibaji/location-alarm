@@ -28,15 +28,16 @@ class AlarmFormFieldModel {
 }
 
 class AlarmFormOutModel {
-  String name = "";
-  double latitude = 0.0;
-  double longitude = 0.0;
-  num radius = 0.0;
+  String? name;
+  // lat and lon in form can be string. to show empty instead of null
+  dynamic latitude;
+  dynamic longitude;
+  num? radius;
 
   AlarmFormOutModel(
       {required this.name,
-      required this.latitude,
-      required this.longitude,
+      this.latitude,
+      this.longitude,
       required this.radius});
 
   AlarmFormOutModel.fromJson(Map<String, dynamic> json) {

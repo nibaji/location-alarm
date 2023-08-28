@@ -25,21 +25,23 @@ class _MyApp extends State<MyApp> {
       _appTheme = theme;
       _isDarkTheme = _appTheme == Brightness.dark;
     });
-    saveAsyncData(
-      "isDarkTheme",
-      jsonEncode(_isDarkTheme),
-    );
+    saveAsyncData("isDarkTheme", _isDarkTheme, isTheme: true);
+  }
+
+  void setInitialTheme() async {
+    try {
+      _isDarkTheme = await getAsyncData("isDarkTheme", isTheme: true);
+    } catch (error) {
+      debugPrint(error.toString());
+      _setTheme(theme: Brightness.light);
+    } finally {
+      _setTheme(theme: _isDarkTheme ? Brightness.dark : Brightness.light);
+    }
   }
 
   @override
   void initState() {
-    getAsyncData("isDarkTheme").then((value) {
-      setState(() {
-        _isDarkTheme = jsonDecode(value);
-      });
-    }).catchError((error) {
-      debugPrint(error.toString());
-    });
+    setInitialTheme();
     super.initState();
   }
 

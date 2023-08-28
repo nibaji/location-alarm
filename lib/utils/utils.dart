@@ -5,15 +5,25 @@ import 'package:location/location.dart';
 
 import 'package:location_alarm_flutter/model/alarms_model.dart';
 
-Future<void> saveAsyncData(String key, String value) async {
+Future<void> saveAsyncData(String key, dynamic value, {bool? isTheme}) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  await preferences.setString(key, value);
+  if (isTheme != null && isTheme) {
+    await preferences.setBool(key, value);
+    return;
+  } else {
+    await preferences.setString(key, value);
+    return;
+  }
 }
 
-Future<String> getAsyncData(String key) async {
+Future<dynamic> getAsyncData(String key, {bool? isTheme}) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
+  if (isTheme != null && isTheme) {
+    bool? requiredBool = preferences.getBool(key);
+    return requiredBool ?? false;
+  }
   String? requiredString = preferences.getString(key);
-  return requiredString ?? "null";
+  return requiredString ?? "{}";
 }
 
 // https://stackoverflow.com/a/27943
@@ -27,10 +37,10 @@ bool isLocationReached(
     return degrees * (math.pi / 180);
   }
 
-  num targetLatitude = targetLocation.latitude;
-  num targetLongitude = targetLocation.longitude;
-  num currentLatitude = currentLocation.latitude?.toDouble() ?? 0;
-  num currentLongitude = currentLocation.longitude?.toDouble() ?? 0;
+  num targetLatitude = targetLocation.latitude!;
+  num targetLongitude = targetLocation.longitude!;
+  num currentLatitude = currentLocation.latitude!.toDouble();
+  num currentLongitude = currentLocation.longitude!.toDouble();
 
   num latitudeDifference = degToRad(targetLatitude - currentLatitude);
   num longitudeDifference = degToRad(targetLongitude - currentLongitude);

@@ -56,7 +56,7 @@ class _AlarmListItemState extends State<AlarmListItem> {
           child: Column(
             children: [
               ListTile(
-                title: Text(widget.alarm.title),
+                title: Text(widget.alarm.title ?? ""),
                 titleTextStyle: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: values["sm"]?.toDouble() ?? 20,
@@ -71,11 +71,11 @@ class _AlarmListItemState extends State<AlarmListItem> {
                   AlarmDescription(
                     title: "Location : ",
                     description:
-                        "${widget.alarm.location.latitude}, ${widget.alarm.location.longitude}",
+                        "${widget.alarm.location?.latitude}, ${widget.alarm.location?.longitude}",
                   ),
                   AlarmDescription(
                     title: "",
-                    description: getTriggerText(widget.alarm.radius),
+                    description: getTriggerText(widget.alarm.radius!),
                   ),
                   const Divider(
                     thickness: 0.2,
@@ -86,7 +86,7 @@ class _AlarmListItemState extends State<AlarmListItem> {
                       AlarmItemIconButton(
                         color: Theme.of(context).colorScheme.error,
                         label: "Delete",
-                        onPressed: () => widget.deleteAlarm(widget.alarm.id),
+                        onPressed: () => widget.deleteAlarm(widget.alarm.id!),
                         icon: const Icon(
                           Icons.delete,
                         ),
@@ -108,7 +108,7 @@ class _AlarmListItemState extends State<AlarmListItem> {
                           Alarmplayer alarmPlayer = Alarmplayer();
                           AlarmModel newAlarm = widget.alarm;
                           newAlarm.active = val;
-                          widget.createEditAlarm(widget.alarm.id, newAlarm);
+                          widget.createEditAlarm(widget.alarm.id!, newAlarm);
                           widget.runService();
                           if (!val) {
                             alarmPlayer.StopAlarm();

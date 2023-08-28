@@ -1,16 +1,17 @@
 class AlarmModel {
-  String title = "";
-  LocationModel location = LocationModel(latitude: 0, longitude: 0);
-  num radius = 0;
+  String? title;
+  LocationModel? location;
+  int? radius;
   bool active = false;
-  String id = "";
+  String? id;
 
-  AlarmModel(
-      {required this.title,
-      required this.location,
-      required this.radius,
-      required this.active,
-      required this.id});
+  AlarmModel({
+    required this.title,
+    required this.location,
+    required this.radius,
+    required this.active,
+    required this.id,
+  });
 
   AlarmModel.fromJson(Map<String, dynamic> json) {
     title = json['title'];
@@ -25,7 +26,7 @@ class AlarmModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['title'] = title;
-    data['location'] = location.toJson();
+    data['location'] = location?.toJson();
     data['radius'] = radius;
     data['active'] = active;
     data['id'] = id;
@@ -34,8 +35,8 @@ class AlarmModel {
 }
 
 class LocationModel {
-  double latitude = 0;
-  double longitude = 0;
+  double? latitude;
+  double? longitude;
 
   LocationModel({required this.latitude, required this.longitude});
 

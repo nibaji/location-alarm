@@ -35,42 +35,39 @@ class AlarmForm extends StatefulWidget {
 class _AlarmFormState extends State<AlarmForm> {
   final _formKey = GlobalKey<FormState>();
 
-  AlarmFormOutModel? _formDraft;
+  AlarmFormOutModel? _formFieldsValue;
 
   final formFields = alarmFormFields
       .map((alarmField) => AlarmFormFieldModel.fromJson(alarmField));
-  AlarmFormOutModel _formFieldsOut =
-      AlarmFormOutModel(name: "", latitude: 0, longitude: 0, radius: 0);
 
-  void _setFieldsOut() {
-    debugPrint("here");
-    debugPrint(_formDraft?.latitude.toString());
-    _formFieldsOut = AlarmFormOutModel(
-      name: _formDraft?.name ?? widget.currentAlarm?.title ?? "",
-      latitude:
-          _formDraft?.latitude ?? widget.currentAlarm?.location.latitude ?? 0.0,
-      longitude: _formDraft?.longitude ??
-          widget.currentAlarm?.location.longitude ??
-          0.0,
-      radius: _formDraft?.radius ?? widget.currentAlarm?.radius ?? 0,
+  void _setFormFieldsValue() {
+    _formFieldsValue = AlarmFormOutModel(
+      name: _formFieldsValue?.name ?? widget.currentAlarm?.title,
+      latitude: _formFieldsValue?.latitude ??
+          widget.currentAlarm?.location?.latitude ??
+          "",
+      longitude: _formFieldsValue?.longitude ??
+          widget.currentAlarm?.location?.longitude ??
+          "",
+      radius: _formFieldsValue?.radius ?? widget.currentAlarm?.radius ?? 0,
     );
   }
 
   void _setFormDraft(AlarmFormOutModel newFormDraft) {
-    debugPrint("oh Noooooo");
-    debugPrint(newFormDraft.latitude.toString());
     setState(() {
-      _formDraft = newFormDraft;
-      _setFieldsOut();
+      _formFieldsValue = newFormDraft;
+      _setFormFieldsValue();
     });
   }
 
   @override
   void initState() {
     setState(() {
-      _formDraft = widget.formDraft;
+      if (widget.formDraft != null) {
+        _formFieldsValue = widget.formDraft;
+      }
       // initialize field values
-      _setFieldsOut();
+      _setFormFieldsValue();
     });
     super.initState();
   }
@@ -80,21 +77,20 @@ class _AlarmFormState extends State<AlarmForm> {
     dynamic alarmId = widget.currentAlarm?.id;
 
     bool isEdit = alarmId != null;
-    _setFieldsOut();
 
-    String getInitialValue(String fieldName) {
+    String? getInitialValue(String fieldName) {
       switch (fieldName) {
         case "title":
-          return _formFieldsOut.name;
+          return _formFieldsValue?.name;
 
         case "latitude":
-          return _formFieldsOut.latitude.toString();
+          return _formFieldsValue?.latitude.toString();
 
         case "longitude":
-          return _formFieldsOut.longitude.toString();
+          return _formFieldsValue?.longitude.toString();
 
         case "radius":
-          return _formFieldsOut.radius.toString();
+          return _formFieldsValue?.radius.toString();
 
         default:
           return "";
@@ -121,11 +117,15 @@ class _AlarmFormState extends State<AlarmForm> {
                 // fields
                 ...formFields.map(
                   (formField) => Padding(
+                    key: Key(formField.name),
                     padding: EdgeInsets.all(values["xs"]?.toDouble() ?? 0.0),
                     child: TextFormField(
-                      key: Key(_formDraft.toString()),
+                      key: Key(
+                          "${formField.name} ${widget.formDraft?.toJson().toString()}"),
+                      controller: TextEditingController(
+                          text: getInitialValue(formField.name)),
                       autofocus: true,
-                      initialValue: getInitialValue(formField.name),
+                      // initialValue: getInitialValue(formField.name),
                       decoration: InputDecoration(
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
@@ -137,20 +137,20 @@ class _AlarmFormState extends State<AlarmForm> {
                       onChanged: (value) {
                         switch (formField.name) {
                           case "title":
-                            _formFieldsOut.name = value;
+                            _formFieldsValue?.name = value;
                             break;
                           case "latitude":
-                            _formFieldsOut.latitude = double.parse(value);
+                            _formFieldsValue?.latitude = double.parse(value);
                             break;
                           case "longitude":
-                            _formFieldsOut.longitude = double.parse(value);
+                            _formFieldsValue?.longitude = double.parse(value);
                             break;
                           case "radius":
-                            _formFieldsOut.radius = int.parse(value);
+                            _formFieldsValue?.radius =
+                                value != "" ? int.parse(value) : 0;
                             break;
                           default:
                         }
-                        widget.setFormDraft(_formFieldsOut);
                       },
                       validator: (value) {
                         if (formField.isRequired) {
@@ -176,8 +176,8 @@ class _AlarmFormState extends State<AlarmForm> {
                         builder: (BuildContext context) {
                           return CoordinatesPicker(
                             currentLocation: widget.userLocation,
-                            setFormDraft: _setFormDraft,
-                            currentFormDraft: _formFieldsOut,
+                            setFormDraft: widget.setFormDraft,
+                            currentFormDraft: _formFieldsValue!,
                           );
                         },
                       );
@@ -192,18 +192,19 @@ class _AlarmFormState extends State<AlarmForm> {
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        LocationModel location = LocationModel(
-                            latitude: _formFieldsOut.latitude,
-                            longitude: _formFieldsOut.longitude);
-                        AlarmModel newAlarmData = AlarmModel(
-                          title: _formFieldsOut.name,
+                      if (_formKey.currentState!.validate() &&
+                          _formFieldsValue != null) {
+                        LocationModel? location = LocationModel(
+                            latitude: _formFieldsValue?.latitude,
+                            longitude: _formFieldsValue?.longitude);
+                        AlarmModel? newAlarmData = AlarmModel(
+                          title: _formFieldsValue?.name,
                           active: false,
                           id: isEdit ? alarmId : DateTime.now().toString(),
                           location: location,
-                          radius: _formFieldsOut.radius,
+                          radius: _formFieldsValue?.radius?.toInt() ?? 0,
                         );
-                        widget.createEditAlarm(newAlarmData.id, newAlarmData);
+                        widget.createEditAlarm(newAlarmData.id!, newAlarmData);
                         widget.setCurrentAlarm(null);
                         widget.setFormDraft(null);
                         widget.closeBottomSheet();
