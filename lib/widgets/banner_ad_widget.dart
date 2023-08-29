@@ -42,15 +42,25 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
         },
       ),
     );
+    _bannerAd.load();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: _bannerAd.size.width.toDouble(),
-      height: _bannerAd.size.height.toDouble(),
+      height: _bannerAd.size.height.toDouble() + 16,
       child: _isBannerAdReady
-          ? AdWidget(ad: _bannerAd)
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AdWidget(ad: _bannerAd),
+            )
           : const Center(
               child: Text("Ad Placeholder"),
             ),
