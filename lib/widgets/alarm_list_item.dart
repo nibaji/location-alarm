@@ -45,6 +45,7 @@ class _AlarmListItemState extends State<AlarmListItem> {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: values["xs"]?.toDouble() ?? 0,
+        vertical: 2,
       ),
       child: Card(
         child: Padding(
@@ -63,25 +64,39 @@ class _AlarmListItemState extends State<AlarmListItem> {
                   color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
-              const Divider(
+              Divider(
                 thickness: 0.2,
+                height: values["xxs"]?.toDouble() ?? 4 / 2,
               ),
               ListBody(
                 children: [
-                  AlarmDescription(
-                    title: "Location : ",
-                    description:
-                        "${widget.alarm.location?.latitude}, ${widget.alarm.location?.longitude}",
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: values["xs"]?.toDouble() ?? 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AlarmDescription(
+                          title: "Location : ",
+                          description:
+                              "${widget.alarm.location?.latitude}, ${widget.alarm.location?.longitude}",
+                        ),
+                        AlarmDescription(
+                          title: "",
+                          description: getTriggerText(widget.alarm.radius!),
+                        ),
+                      ],
+                    ),
                   ),
-                  AlarmDescription(
-                    title: "",
-                    description: getTriggerText(widget.alarm.radius!),
-                  ),
-                  const Divider(
+                  Divider(
                     thickness: 0.2,
+                    height: values["xxs"]?.toDouble(),
                   ),
                   ButtonBar(
                     alignment: MainAxisAlignment.spaceBetween,
+                    buttonPadding: EdgeInsets.symmetric(
+                      vertical: values["xs"]?.toDouble() ?? 8,
+                    ),
                     children: [
                       AlarmItemIconButton(
                         color: Theme.of(context).colorScheme.error,

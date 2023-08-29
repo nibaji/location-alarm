@@ -12,8 +12,8 @@ class AlarmDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
-        vertical: values["xs"]?.toDouble() ?? 4,
-        horizontal: values["s"]?.toDouble() ?? 8,
+        vertical: values["xs"]?.toDouble() ?? 8,
+        horizontal: values["s"]?.toDouble() ?? 16,
       ),
       child: RichText(
         text: TextSpan(
