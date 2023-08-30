@@ -36,7 +36,7 @@ class WarningBanner extends StatelessWidget {
                   )),
               TextSpan(
                 text:
-                    "once you have an active alarm. You can keep the app in the app switcher.",
+                    "once you have an active alarm. You can keep the app in the app switcher. Make sure you have allowed Background Location Access, Notification Permission and Disabled Battery optimizations for Geo Alarm.",
               )
             ],
           ),
