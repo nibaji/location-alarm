@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:alarmplayer/alarmplayer.dart';
+import 'package:permission_handler/permission_handler.dart' as Permissions;
 
 import 'package:location_alarm_flutter/widgets/alarm_form.dart';
 import 'package:location_alarm_flutter/widgets/alarm_list_item.dart';
@@ -47,6 +48,7 @@ class _HomePageState extends State<HomePage> {
   late PermissionStatus _permissionGranted;
   LocationData? _locationData;
 
+  // state manipulation fns
   void _changeBottomSheetVisibility() {
     setState(() {
       _showBottomSheet = !_showBottomSheet;
@@ -81,6 +83,7 @@ class _HomePageState extends State<HomePage> {
     _formDraft = draft;
   }
 
+  // Permissions
   Future<void> getLocation() async {
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
@@ -98,11 +101,31 @@ class _HomePageState extends State<HomePage> {
       }
     }
 
-    location.enableBackgroundMode(enable: true);
-
     _locationData = await location.getLocation();
+
+    enableBgLocationMode();
   }
 
+  Future<void> enableBgLocationMode() async {
+    bool isDenied = await location.isBackgroundModeEnabled();
+    if (isDenied) {
+      location.enableBackgroundMode(enable: true);
+    }
+    return;
+  }
+
+  Future<void> getNotificationPermission() async {
+    bool isDenied = await Permissions.Permission.notification.isDenied;
+    bool isPermanentlyDenied =
+        await Permissions.Permission.notification.isPermanentlyDenied;
+    if (isDenied || isPermanentlyDenied) {
+      await Permissions.Permission.notification.request();
+      getNotificationPermission();
+    }
+    return;
+  }
+
+  // App Logics
   Future<void> triggerAlarm(Function callbackFunction) async {
     Alarmplayer alarmplayer = Alarmplayer();
     alarmplayer.Alarm(
@@ -210,8 +233,16 @@ class _HomePageState extends State<HomePage> {
     }).catchError((error) {
       debugPrint(error.toString());
     });
+
+    // get permissions and start the service
     getLocation().then(
-      (value) => runService(),
+      (value) {
+        getNotificationPermission().then(
+          (value) {
+            runService();
+          },
+        );
+      },
     );
     super.initState();
   }
