@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -101,11 +102,16 @@ class _HomePageState extends State<HomePage> {
     _locationData = await location.getLocation();
   }
 
-  void triggerAlarm() {
+  Future<void> triggerAlarm(Function callbackFunction) async {
     Alarmplayer alarmplayer = Alarmplayer();
     alarmplayer.Alarm(
       url: "assets/sounds/clock-alarm-8761.mp3",
     );
+
+    await Future.delayed(const Duration(seconds: 60));
+
+    await alarmplayer.StopAlarm();
+    await callbackFunction();
   }
 
   bool shouldStartService() {
@@ -121,30 +127,69 @@ class _HomePageState extends State<HomePage> {
     return false;
   }
 
-  void runService() {
-    if (shouldStartService()) {
-      location.enableBackgroundMode(enable: true);
-      location.onLocationChanged.listen(
-        (LocationData currentLocation) {
-          for (var element in activeAlarms) {
-            if (element.location != null && element.radius != null) {
-              bool reached = isLocationReached(
-                currentLocation,
-                element.location!,
-                element.radius!,
-              );
-              if (reached) {
-                triggerAlarm();
+  StreamSubscription<LocationData> locationSubscription() {
+    return location.onLocationChanged.listen(
+      (LocationData currentLocation) async {
+        for (var element in activeAlarms) {
+          if (element.location != null && element.radius != null) {
+            bool reached = isLocationReached(
+              currentLocation,
+              element.location!,
+              element.radius!,
+            );
+            if (reached) {
+              void alarmTriggerDoneCallback() async {
+                AlarmModel newAlarmData = AlarmModel(
+                  title: element.title,
+                  location: element.location,
+                  radius: element.radius,
+                  active: false,
+                  id: element.id,
+                );
                 activeAlarms = [
                   ...activeAlarms.where((e) => e.id != element.id),
                 ];
+                _createEditAlarm(element.id!, newAlarmData);
+                locationSubscription().cancel();
                 runService();
-                return;
               }
+
+              final DateTime now = DateTime.now();
+              final formattedTime =
+                  "${now.hour}:${now.minute} | ${now.day}/${now.month}/${now.year}";
+
+              await location.changeNotificationOptions(
+                onTapBringToFront: true,
+                iconName: "ic_stat_notifications",
+                title: "You have arrived!",
+                subtitle: "You have reached ${element.title}!",
+                description: formattedTime,
+              );
+
+              await triggerAlarm(alarmTriggerDoneCallback);
+              return;
             }
           }
-        },
+        }
+      },
+    );
+  }
+
+  void runService() async {
+    location.enableBackgroundMode(
+      enable: true,
+    );
+
+    if (shouldStartService()) {
+      location.changeNotificationOptions(
+        onTapBringToFront: true,
+        iconName: "ic_stat_notifications",
+        title: "Geo Alarm is running in the background",
+        subtitle: "You'll be alerted on reaching the destination",
       );
+      locationSubscription();
+    } else {
+      await locationSubscription().cancel();
     }
   }
 
