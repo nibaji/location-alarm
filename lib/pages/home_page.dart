@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:alarmplayer/alarmplayer.dart';
+import 'package:optimize_battery/optimize_battery.dart';
 import 'package:permission_handler/permission_handler.dart' as Permissions;
 
 import 'package:location_alarm_flutter/widgets/alarm_form.dart';
@@ -103,7 +104,8 @@ class _HomePageState extends State<HomePage> {
 
     _locationData = await location.getLocation();
 
-    enableBgLocationMode();
+    await enableBgLocationMode();
+    return;
   }
 
   Future<void> enableBgLocationMode() async {
@@ -120,7 +122,14 @@ class _HomePageState extends State<HomePage> {
         await Permissions.Permission.notification.isPermanentlyDenied;
     if (isDenied || isPermanentlyDenied) {
       await Permissions.Permission.notification.request();
-      getNotificationPermission();
+    }
+    return;
+  }
+
+  Future<void> disableBatteryOptimization() async {
+    bool ignoring = await OptimizeBattery.isIgnoringBatteryOptimizations();
+    if (!ignoring) {
+      await OptimizeBattery.stopOptimizingBatteryUsage();
     }
     return;
   }
@@ -239,7 +248,11 @@ class _HomePageState extends State<HomePage> {
       (value) {
         getNotificationPermission().then(
           (value) {
-            runService();
+            disableBatteryOptimization().then(
+              (value) {
+                runService();
+              },
+            );
           },
         );
       },
