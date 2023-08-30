@@ -12,6 +12,7 @@ import 'package:location_alarm_flutter/utils/utils.dart';
 import 'package:location_alarm_flutter/model/alarms_model.dart';
 import 'package:location_alarm_flutter/consts.dart';
 import 'package:location_alarm_flutter/widgets/banner_ad_widget.dart';
+import 'package:location_alarm_flutter/widgets/warning_widget.dart';
 
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
@@ -246,18 +247,26 @@ class _HomePageState extends State<HomePage> {
           List<AlarmModel> alarmsList = [..._alarmsMap.values.map((e) => e)];
           return Center(
             child: alarmsList.isNotEmpty
-                ? ListView.builder(
-                    itemCount: alarmsList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return AlarmListItem(
-                        alarm: alarmsList[index],
-                        createEditAlarm: _createEditAlarm,
-                        deleteAlarm: _deleteAlarm,
-                        setCurrentAlarm: _setCurrentAlarm,
-                        showBottomSheet: _changeBottomSheetVisibility,
-                        runService: runService,
-                      );
-                    },
+                ? Column(
+                    children: [
+                      const WarningBanner(),
+                      Expanded(
+                        child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: alarmsList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return AlarmListItem(
+                              alarm: alarmsList[index],
+                              createEditAlarm: _createEditAlarm,
+                              deleteAlarm: _deleteAlarm,
+                              setCurrentAlarm: _setCurrentAlarm,
+                              showBottomSheet: _changeBottomSheetVisibility,
+                              runService: runService,
+                            );
+                          },
+                        ),
+                      )
+                    ],
                   )
                 : TextButton(
                     onPressed: _changeBottomSheetVisibility,
