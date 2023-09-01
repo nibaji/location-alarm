@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 import 'package:location_alarm_flutter/pages/home_page.dart';
 
@@ -8,6 +9,22 @@ import 'package:location_alarm_flutter/utils/utils.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
+
+  AwesomeNotifications().initialize(
+    // set the icon to null if you want to use the default app icon
+    'resource://drawable/ic_stat_notifications',
+    [
+      NotificationChannel(
+        channelGroupKey: 'geoAlarm_channel_group',
+        channelKey: 'geoAlarm_Notification_channel',
+        channelName: 'Basic notifications',
+        channelDescription: 'Notifications',
+        importance: NotificationImportance.Low,
+      )
+    ],
+
+    debug: true,
+  );
 
   runApp(const MyApp());
 }

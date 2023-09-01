@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:alarmplayer/alarmplayer.dart';
@@ -41,6 +42,7 @@ class _HomePageState extends State<HomePage> {
 
   final Map<String, AlarmModel> _alarmsMap = {};
   List<AlarmModel> activeAlarms = [];
+  AlarmModel? alarmToBeTriggered;
 
   dynamic _currentAlarm;
   dynamic _formDraft;
@@ -135,7 +137,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   // App Logics
-  Future<void> triggerAlarm(Function callbackFunction) async {
+  Future<void> triggerAlarm(Function callbackFunction, AlarmModel alarm) async {
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 1,
+        channelKey: 'geoAlarm_Notification_channel',
+        title: '${Emojis.time_alarm_clock} You have arrived!',
+        body: "You have reached ${alarm.title}!",
+        fullScreenIntent: true,
+        locked: true,
+        wakeUpScreen: true,
+      ),
+    );
     Alarmplayer alarmplayer = Alarmplayer();
     alarmplayer.Alarm(
       url: "assets/sounds/clock-alarm-8761.mp3",
@@ -163,45 +176,42 @@ class _HomePageState extends State<HomePage> {
   StreamSubscription<LocationData> locationSubscription() {
     return location.onLocationChanged.listen(
       (LocationData currentLocation) async {
-        for (var element in activeAlarms) {
-          if (element.location != null && element.radius != null) {
-            bool reached = isLocationReached(
-              currentLocation,
-              element.location!,
-              element.radius!,
-            );
-            if (reached) {
-              void alarmTriggerDoneCallback() async {
-                AlarmModel newAlarmData = AlarmModel(
-                  title: element.title,
-                  location: element.location,
-                  radius: element.radius,
-                  active: false,
-                  id: element.id,
+        if (alarmToBeTriggered == null) {
+          Future.forEach(
+            activeAlarms,
+            (element) async {
+              if (element.location != null && element.radius != null) {
+                bool reached = isLocationReached(
+                  currentLocation,
+                  element.location!,
+                  element.radius!,
                 );
-                activeAlarms = [
-                  ...activeAlarms.where((e) => e.id != element.id),
-                ];
-                _createEditAlarm(element.id!, newAlarmData);
-                locationSubscription().cancel();
-                runService();
+                if (reached) {
+                  alarmToBeTriggered = element;
+                  return;
+                }
               }
-
-              final DateTime now = DateTime.now();
-              final formattedTime =
-                  "${now.hour}:${now.minute} | ${now.day}/${now.month}/${now.year}";
-
-              await location.changeNotificationOptions(
-                onTapBringToFront: true,
-                iconName: "ic_stat_notifications",
-                title: "You have arrived!",
-                subtitle: "You have reached ${element.title}!",
-                description: formattedTime,
+            },
+          );
+          if (alarmToBeTriggered != null) {
+            void alarmTriggerDoneCallback() async {
+              AlarmModel newAlarmData = AlarmModel(
+                title: alarmToBeTriggered!.title,
+                location: alarmToBeTriggered!.location,
+                radius: alarmToBeTriggered!.radius,
+                active: false,
+                id: alarmToBeTriggered!.id,
               );
-
-              await triggerAlarm(alarmTriggerDoneCallback);
-              return;
+              activeAlarms = [
+                ...activeAlarms.where((e) => e.id != alarmToBeTriggered!.id),
+              ];
+              _createEditAlarm(alarmToBeTriggered!.id!, newAlarmData);
+              locationSubscription().cancel();
+              alarmToBeTriggered = null;
+              runService();
             }
+
+            await triggerAlarm(alarmTriggerDoneCallback, alarmToBeTriggered!);
           }
         }
       },
