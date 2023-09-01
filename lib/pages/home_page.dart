@@ -7,6 +7,7 @@ import 'package:location/location.dart';
 import 'package:alarmplayer/alarmplayer.dart';
 import 'package:optimize_battery/optimize_battery.dart';
 import 'package:permission_handler/permission_handler.dart' as Permissions;
+import 'package:vibration/vibration.dart';
 
 import 'package:location_alarm_flutter/widgets/alarm_form.dart';
 import 'package:location_alarm_flutter/widgets/alarm_list_item.dart';
@@ -138,6 +139,21 @@ class _HomePageState extends State<HomePage> {
 
   // App Logics
   Future<void> triggerAlarm(Function callbackFunction, AlarmModel alarm) async {
+    Vibration.vibrate(
+      repeat: 8,
+      pattern: [
+        0,
+        500,
+        250,
+        500,
+        250,
+        1000,
+        250,
+        1500,
+        250,
+        2000,
+      ],
+    );
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: 1,
@@ -157,6 +173,7 @@ class _HomePageState extends State<HomePage> {
     await Future.delayed(const Duration(seconds: 60));
 
     await alarmplayer.StopAlarm();
+    Vibration.cancel();
     await callbackFunction();
   }
 
@@ -232,6 +249,8 @@ class _HomePageState extends State<HomePage> {
       );
       locationSubscription();
     } else {
+      Vibration.cancel();
+      await alarmplayer.StopAlarm();
       await locationSubscription().cancel();
     }
   }
