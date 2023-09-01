@@ -56,14 +56,14 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
     return SizedBox(
       width: _bannerAd.size.width.toDouble(),
       height: _bannerAd.size.height.toDouble() + 16,
-      child: _isBannerAdReady
-          ? Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: AdWidget(ad: _bannerAd),
-            )
-          : const Center(
-              child: Text("Ad Placeholder"),
-            ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: _isBannerAdReady
+            ? AdWidget(ad: _bannerAd)
+            : const Center(
+                child: LinearProgressIndicator(),
+              ),
+      ),
     );
   }
 }
