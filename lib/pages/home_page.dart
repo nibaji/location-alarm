@@ -291,6 +291,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    List<AlarmModel> alarmsList = [..._alarmsMap.values.map((e) => e)];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,
@@ -315,48 +317,42 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Builder(
-        builder: (context) {
-          List<AlarmModel> alarmsList = [..._alarmsMap.values.map((e) => e)];
-          return Center(
-            child: alarmsList.isNotEmpty
-                ? Column(
-                    children: [
-                      const WarningBanner(),
-                      Expanded(
-                        child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: alarmsList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return AlarmListItem(
-                              alarm: alarmsList[index],
-                              createEditAlarm: _createEditAlarm,
-                              deleteAlarm: _deleteAlarm,
-                              setCurrentAlarm: _setCurrentAlarm,
-                              showBottomSheet: _changeBottomSheetVisibility,
-                              runService: runService,
-                            );
-                          },
-                        ),
-                      )
-                    ],
-                  )
-                : TextButton(
-                    onPressed: _changeBottomSheetVisibility,
-                    style: ButtonStyle(
-                      overlayColor: MaterialStateProperty.all(
-                        Theme.of(context).colorScheme.errorContainer,
-                      ),
-                    ),
-                    child: Text(
-                      "Alarm List is Empty. Add one?",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
+      body: Center(
+        child: alarmsList.isNotEmpty
+            ? Column(
+                children: [
+                  const WarningBanner(),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: alarmsList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return AlarmListItem(
+                          alarm: alarmsList[index],
+                          createEditAlarm: _createEditAlarm,
+                          deleteAlarm: _deleteAlarm,
+                          setCurrentAlarm: _setCurrentAlarm,
+                          showBottomSheet: _changeBottomSheetVisibility,
+                          runService: runService,
+                        );
+                      },
                     ),
                   ),
-          );
-        },
+                ],
+              )
+            : TextButton(
+                onPressed: _changeBottomSheetVisibility,
+                style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.all(
+                    Theme.of(context).colorScheme.errorContainer,
+                  ),
+                ),
+                child: Text(
+                  "Alarm List is Empty. Add one?",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                ),
+              ),
       ),
       bottomNavigationBar: const BannerAdWidget(),
       bottomSheet: _showBottomSheet
