@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:location_alarm_flutter/consts.dart';
 
 import 'package:location_alarm_flutter/model/alarms_model.dart';
+import 'package:location_alarm_flutter/pages/home_page.dart';
 import 'package:location_alarm_flutter/widgets/alarm_list_item_button.dart';
 import 'package:location_alarm_flutter/widgets/alarm_list_item_description.dart';
 
@@ -127,6 +128,7 @@ class _AlarmListItemState extends State<AlarmListItem> {
                           widget.runService();
                           if (!val) {
                             alarmPlayer.StopAlarm();
+                            alarmToBeTriggered = null;
                           }
                         },
                       ),

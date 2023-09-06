@@ -1,12 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 import 'package:location_alarm_flutter/pages/home_page.dart';
 
 import 'package:location_alarm_flutter/utils/utils.dart';
+import 'package:vibration/vibration.dart';
 
-void main() {
+final backgroundService = FlutterBackgroundService();
+
+@pragma('vm:entry-point')
+onStart(ServiceInstance service) async {
+  dynamic locationSub = onChangeLocationSubscription;
+  if (startService) {
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 1,
+        channelKey: 'geoAlarm_Notification_channel',
+        title:
+            '${Emojis.time_alarm_clock} Geo Alarm is running in the Background',
+        body: "You'll be alerted on reaching the destination}!",
+        fullScreenIntent: true,
+      ),
+    );
+    if (locationSub != null) {
+      locationSub();
+    }
+  } else {
+    Vibration.cancel();
+    await alarmplayer.StopAlarm();
+    await locationSub?.cancel();
+    await service.stopSelf();
+  }
+}
+
+initializeBackgroundService() async {
+  await backgroundService.configure(
+    androidConfiguration: AndroidConfiguration(
+      // this will be executed when app is in foreground or background in separated isolate
+      onStart: onStart,
+      // auto start service
+      autoStart: true,
+      isForegroundMode: true,
+
+      notificationChannelId:
+          "geoAlarm_Notification_channel", // this must match with notification channel you created above.
+      initialNotificationTitle: 'AWESOME SERVICE',
+      initialNotificationContent: 'Initializing',
+      foregroundServiceNotificationId: 1,
+    ),
+    iosConfiguration: IosConfiguration(
+      autoStart: true,
+      onForeground: onStart,
+    ),
+  );
+  backgroundService.startService();
+}
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
 
@@ -22,7 +74,6 @@ void main() {
         importance: NotificationImportance.Low,
       )
     ],
-
     debug: true,
   );
 

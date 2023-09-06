@@ -18,6 +18,12 @@ import 'package:location_alarm_flutter/consts.dart';
 import 'package:location_alarm_flutter/widgets/banner_ad_widget.dart';
 import 'package:location_alarm_flutter/widgets/warning_widget.dart';
 
+bool startService = false;
+Alarmplayer alarmplayer = Alarmplayer();
+StreamSubscription<LocationData>? onChangeLocationSubscription;
+List<AlarmModel> activeAlarms = [];
+AlarmModel? alarmToBeTriggered;
+
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
   HomePage({
@@ -37,13 +43,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Location location = Location();
-  Alarmplayer alarmplayer = Alarmplayer();
 
   bool _showBottomSheet = false;
 
   final Map<String, AlarmModel> _alarmsMap = {};
-  List<AlarmModel> activeAlarms = [];
-  AlarmModel? alarmToBeTriggered;
 
   dynamic _currentAlarm;
   dynamic _formDraft;
@@ -165,7 +168,6 @@ class _HomePageState extends State<HomePage> {
         wakeUpScreen: true,
       ),
     );
-    Alarmplayer alarmplayer = Alarmplayer();
     alarmplayer.Alarm(
       url: "assets/sounds/clock-alarm-8761.mp3",
     );
@@ -193,6 +195,7 @@ class _HomePageState extends State<HomePage> {
   StreamSubscription<LocationData> locationSubscription() {
     return location.onLocationChanged.listen(
       (LocationData currentLocation) async {
+        debugPrint("heree ${alarmToBeTriggered?.id}");
         if (alarmToBeTriggered == null) {
           Future.forEach(
             activeAlarms,
@@ -239,20 +242,9 @@ class _HomePageState extends State<HomePage> {
     location.enableBackgroundMode(
       enable: true,
     );
-
-    if (shouldStartService()) {
-      location.changeNotificationOptions(
-        onTapBringToFront: true,
-        iconName: "ic_stat_notifications",
-        title: "Geo Alarm is running in the background",
-        subtitle: "You'll be alerted on reaching the destination",
-      );
-      locationSubscription();
-    } else {
-      Vibration.cancel();
-      await alarmplayer.StopAlarm();
-      await locationSubscription().cancel();
-    }
+    Vibration.cancel();
+    startService = shouldStartService();
+    onChangeLocationSubscription = locationSubscription();
   }
 
   @override
